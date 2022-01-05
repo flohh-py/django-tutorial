@@ -1,5 +1,30 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
-<h1>TEST PRODUCT</h1>
+<div class="container mx-auto mt-6">
+	<div id="prodls_app">
+    <table class="table">
+      <thead>
+        <th>Code</th>
+        <th>Price</th>
+        <th>Purchase</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>QTY</th>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr>
+          <td>{{ product.code }}</td>
+          <td>{{ product.price }}</td>
+          <td>{{ product.purchase }}</td>
+          <td>{{ product.descrip }}</td>
+          <td>{{ product.type }}</td>
+          <td>{{ product.qty }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+	</div>
+</div>
 {% endblock content %}

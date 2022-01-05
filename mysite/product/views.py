@@ -8,11 +8,15 @@ class ProductView(View):
 
     def get(self, request, id=None):
         if id:
-            product_pk = list(Product.objects.values().filter(pk=id))
+            products = list(Product.objects.values().filter(pk=id))
         else:
             products = list(Product.objects.values())
 
-        return render(request, self.template)
+        context = {
+            'products': products,
+        }
+
+        return render(request=request, template_name=self.template, context=context)
 
     def post(self, request, id=None):
         if id:
