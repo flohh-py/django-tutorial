@@ -1,0 +1,12 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block content %}
+<div class="container mx-auto mt-6">
+  <form method='POST' novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success"/>
+    </button>
+  </form>
+</div>
+{% endblock content %}

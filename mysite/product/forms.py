@@ -7,8 +7,15 @@ class ProductForm(forms.ModelForm):
         model = Product
         fields = [
                 'code',
+                'descrip',
                 'price',
                 'purchase',
-                'descrip',
                 'qty',
                 ]
+        widgets = {
+                'code': forms.TextInput(attrs={'class': 'form-control'}),
+                'descrip': forms.TextInput(attrs={'class': 'form-control'}),
+                'price': forms.TextInput(attrs={'class': 'form-control'}),
+                'purchase': forms.TextInput(attrs={'class': 'form-control'}),
+                'qty': forms.TextInput(attrs={'class': 'form-control'}),
+                }

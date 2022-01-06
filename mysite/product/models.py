@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 PROD_TYPE = [
     ('stock', 'Stockable'),
@@ -15,6 +16,10 @@ class Product(models.Model):
 
     def __str__(self):
         return self.code
+    
+    def get_absolute_url(self):
+        # return 'prduct:list', (), {'slug': self.slug}
+        return reverse('product:detail', args=[self.id])
 
     class Meta:
         ordering = ['code']
