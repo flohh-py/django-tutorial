@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.views.generic import View, ListView, DetailView
+from django.views.generic import View, ListView, DetailView, DeleteView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from .models import Product
@@ -35,6 +35,12 @@ class ProductDetail(DetailView):
     fields = "__all__"
     pk_url_kwarg = 'pk'
 
+
+class ProductDelete(DeleteView):
+    model = Product
+    template_name = 'product/delete.html'
+    success_url = reverse_lazy('product:list')
+    pk_url_kwarg = 'pk'
 
 # class ProductCreate(View):
 #     template = 'product/product_create.html'

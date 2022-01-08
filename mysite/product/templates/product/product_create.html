@@ -1,6 +1,7 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
+<br>
 <form action='.' method='POST'>{% csrf_token %}
   {{ products.as_p }}
   <input type='submit' values='Save'/>
