@@ -1,0 +1,38 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block content %}
+<br>
+<div class="container mx-auto mt-6">
+  <h3>Invoice Detail</h3>
+  <div class="form-group row">
+    <div class="form-group col">
+    <a>Code</a>
+    </div>
+    <div class="form-group col">
+    {{ invoice.code }}
+    </div>
+  </div>
+<br>
+  <table class="table">
+    <thead>
+      <th>Code</th>
+      <th>QTY</th>
+      <th>Price</th>
+    </thead>
+    <tbody>
+      {% for line in lines %}
+      <tr>
+        <td>{{ line.product }}</td>
+        <td>{{ line.qty }}</td>
+        <td>{{ line.price }}</td>
+      </tr>
+      {% endfor %}
+      <tr>
+        <td></td>
+        <td>Total:</td>
+        <td>{{ invoice.total }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

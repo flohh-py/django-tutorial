@@ -17,6 +17,14 @@
             <li><a class="dropdown-item" href="{% url 'product:create' %}">Create</a></li>
           </ul>
       </li>
+      <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="invoDrop" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Invoices
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="invoDrop">
+            <li><a class="dropdown-item" href="{% url 'invoice:list' %}">List</a></li>
+          </ul>
+      </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Pricing</a>
       </li>

@@ -1,0 +1,28 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block content %}
+<br>
+<div class="container mx-auto mt-6">
+  <table class="table">
+    <thead>
+      <th>Code</th>
+      <th>Total</th>
+    </thead>
+    <tbody>
+      {% for invoice in object_list %}
+      <tr>
+        <td>{{ invoice.code }}</td>
+        <td>{{ invoice.total }}</td>
+        <td>
+          <div class="form-group row">
+            <div class="form-group col">
+              <a href="{% url 'invoice:detail' pk=invoice.id %}" class="btn btn-success form-control col-3 mx-2">Detail</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
