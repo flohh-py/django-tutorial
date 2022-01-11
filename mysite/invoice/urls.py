@@ -5,4 +5,5 @@ app_name = "invoice"
 urlpatterns = [
     path('', InvoiceList.as_view(), name='list'),
     path('detail/<int:pk>', InvoiceDetail.as_view(), name='detail'),
+    path('create/', InvoiceCreate.as_view(), name='create'),
 ]

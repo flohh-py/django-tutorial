@@ -1,5 +1,6 @@
 from django import forms
-from .models import Invoice
+from django.forms import inlineformset_factory
+from .models import Invoice, InvoiceLine
 
 
 class InvoiceForm(forms.ModelForm):
@@ -13,3 +14,17 @@ class InvoiceForm(forms.ModelForm):
                 'code': forms.TextInput(attrs={'class': 'form-control'}),
                 'total': forms.TextInput(attrs={'class': 'form-control'}),
                 }
+
+
+class InvoiceLineForm(forms.ModelForm):
+    class Meta:
+        model = InvoiceLine
+        fields = '__all__'
+
+InvoiceLineIF = inlineformset_factory(
+    Invoice,
+    InvoiceLine,
+    fields= "__all__",
+    form=InvoiceLineForm,
+    extra= 1,
+)

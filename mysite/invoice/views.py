@@ -1,7 +1,7 @@
-from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
+from django.urls import reverse_lazy
 from .models import Invoice, InvoiceLine
-from .forms import InvoiceForm
+from .forms import InvoiceForm, InvoiceLineIF
 
 
 class InvoiceList(ListView):
@@ -23,3 +23,31 @@ class InvoiceDetail(DetailView):
             context['lines'] = lines
             return context
         
+
+class InvoiceCreate(CreateView):
+    model = Invoice
+    form_class = InvoiceForm
+    template_name = 'invoice/create.html'
+    success_url = reverse_lazy('invoice:list')
+
+    def get_context_data(self, **kwargs):
+        context = super(InvoiceCreate, self).get_context_data(**kwargs)
+
+        if self.request.POST:
+            context['lines'] = InvoiceLineIF(self.request.POST)
+                
+        else:
+            context['lines'] = InvoiceLineIF()
+
+        print(self.object)
+        return context
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        lines = context['lines']
+        self.object = form.save()
+        if lines.is_valid():
+            lines.instance = self.object
+            lines.save
+
+        return super(InvoiceCreate, self).form_invalid(form)
