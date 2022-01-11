@@ -48,6 +48,6 @@ class InvoiceCreate(CreateView):
         self.object = form.save()
         if lines.is_valid():
             lines.instance = self.object
-            lines.save
+            lines.save()
 
         return super(InvoiceCreate, self).form_invalid(form)
