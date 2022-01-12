@@ -39,7 +39,6 @@ class InvoiceCreate(CreateView):
         else:
             context['lines'] = InvoiceLineIF()
 
-        print(self.object)
         return context
 
     def form_valid(self, form):
