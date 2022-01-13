@@ -1,17 +1,52 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
+<style>
+  #id_invoice-0-product {
+    width: 100%;
+  }
+</style>
 <br>
 <div class="container mx-auto mt-6">
   <form method="post">{% csrf_token %}
       {{ form.as_p }}
-      {{ lines.management_form}}
-      {% for line in lines %}
-        {{ line.as_p }}
+    <table class="table">
+      <thead>
+        <th>Product</th>
+        <th>QTY</th>
+        <th>Price</th>
+      </thead>
+      <tbody>
+        {{ lines.management_form}}
+        {% for line in lines %}
+        <tr>
+          <td>{{ line.product }}</td>
+          <td>{{ line.qty }}</td>
+          <td>{{ line.price }}</td>
+        </tr>
       {% endfor %}
+      </table>
       <button type="submit" class="btn btn-success"/>
         Save
       </button>
   </form>
 </div>
+<script>
+  $(document).ready(function() {
+    $("#id_invoice-0-product").select2({
+      ajax: {
+        url: "{% url 'product:list' %}",
+        dataType: "json",
+        processResults: function (data) {
+          return {
+            results: $.map(data, function(r){
+              return {id: r.id, text: r.code};
+              })
+            };
+          }
+        },
+        minimumInputLength: 2
+      });
+  });
+</script>
 {% endblock content %}

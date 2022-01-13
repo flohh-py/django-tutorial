@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View, ListView, DetailView, DeleteView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.http import JsonResponse 
 from .models import Product
 from .forms import ProductForm
 
@@ -10,6 +11,18 @@ class ProductList(ListView):
     model = Product
     template_name = 'product/list.html'
     paginate_by = 10
+
+    def is_ajax(self, request):
+        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+    def get(self, *args, **kwargs):
+        if self.is_ajax(request=self.request):
+            ajax_val = self.request.GET['term']
+            prod_obj = Product.objects.all().filter(code__icontains=ajax_val)
+            products = list(prod_obj.values())
+            return JsonResponse(products, safe=False)
+
+        return super(ProductList, self).get(*args,**kwargs)
 
 
 class ProductCreate(CreateView):
