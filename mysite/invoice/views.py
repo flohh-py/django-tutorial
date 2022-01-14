@@ -44,8 +44,8 @@ class InvoiceCreate(CreateView):
     def form_valid(self, form):
         context = self.get_context_data()
         lines = context['lines']
-        self.object = form.save()
         if lines.is_valid():
+            self.object = form.save()
             lines.instance = self.object
             lines.save()
 
