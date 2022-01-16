@@ -1,18 +1,18 @@
 $(document).ready(function() {
-  // $("#id_invoice-0-product").select2({
-  //   ajax: {
-  //     url: "{% url 'product:list' %}",
-  //     dataType: "json",
-  //     processResults: function(data) {
-  //       return {
-  //         results: $.map(data, function(r) {
-  //           return { id: r.id, text: r.code };
-  //         })
-  //       };
-  //     }
-  //   },
-  //   minimumInputLength: 2
-  // });
+  $("#id_invoice-0-product").select2({
+    ajax: {
+      url: "/product/",
+      dataType: "json",
+      processResults: function(data) {
+        return {
+          results: $.map(data, function(r) {
+            return { id: r.id, text: r.code };
+          })
+        };
+      }
+    },
+    minimumInputLength: 2
+  });
   $("#add-new").click(function(event) {
     if (event) {
       event.preventDefault()

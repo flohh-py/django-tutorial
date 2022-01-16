@@ -22,12 +22,12 @@ class InvoiceLineForm(forms.ModelForm):
         model = InvoiceLine
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = Product.objects.none()
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['product'].queryset = Product.objects.none()
 
-        if 'product' in self.data:
-            self.fields['product'].queryset = Product.objects.all()
+    #     if 'product' in self.data:
+    #         self.fields['product'].queryset = Product.objects.all()
 
 
 InvoiceLineIF = inlineformset_factory(
