@@ -6,9 +6,20 @@
 <br>
 <div class="container mx-auto mt-6">
   <form method="post">{% csrf_token %}
-    {{ form.as_p }}
+    <div class="container mx-auto">
+    {{ form.code.label }}
+    {{ form.code }}
+    {{ form.date.label }}
+    <div class="container row">
+    {{ form.date }}
+    </div>
+    {{ form.type.label }}
+    {{ form.type }}
+    {{ form.total.label }}
+    {{ form.total }}
     {{ lines.management_form}}
-    <div id='line-form-list'>
+    </div>
+    <div id="line-form-list">
       {% for line in lines %}
       <div class="line-form">
         {{ line.as_table }}

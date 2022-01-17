@@ -6,12 +6,16 @@
   <table class="table">
     <thead>
       <th>Code</th>
+      <th>Date</th>
+      <th>Type</th>
       <th>Total</th>
     </thead>
     <tbody>
       {% for invoice in object_list %}
       <tr>
         <td>{{ invoice.code }}</td>
+        <td>{{ invoice.date }}</td>
+        <td>{{ invoice.type }}</td>
         <td>{{ invoice.total }}</td>
         <td>
           <div class="form-group row">
