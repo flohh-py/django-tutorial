@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from product.models import Product
+from partner.models import Partner
 
 INVO_TYPE = [
     ('sell', 'Sell'),
@@ -10,6 +11,7 @@ INVO_TYPE = [
 class Invoice(models.Model):
     code = models.CharField(max_length=10, null=True)
     date = models.DateField(null=True)
+    partner = models.ForeignKey(Partner, related_name='partner', on_delete=models.CASCADE, null=True)
     type = models.CharField(choices=INVO_TYPE, default='sell', null=True, max_length=10)
     total = models.FloatField(default=0.0)
 

@@ -10,12 +10,14 @@ class InvoiceForm(forms.ModelForm):
         fields = [
                 'code',
                 'date',
+                'partner',
                 'type',
                 'total',
                 ]
         widgets = {
                 'code': forms.TextInput(attrs={'class': 'form-control'}),
                 'date': forms.SelectDateWidget(attrs={'class': 'form-control container col'}),
+                'partner': forms.Select(attrs={'class': 'form-control'}),
                 'type': forms.Select(attrs={'class': 'form-control'}),
                 'total': forms.TextInput(attrs={'class': 'form-control'}),
                 }

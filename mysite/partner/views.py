@@ -30,3 +30,17 @@ class PartnerCreate(CreateView):
     template_name = 'partner/create.html'
     success_url = reverse_lazy('partner:list')
 
+
+class PartnerUpdate(UpdateView):
+    model = Partner
+    form_class = PartnerForm
+    template_name = 'partner/update.html'
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('partner:list')
+
+
+class PartnerDelete(DeleteView):
+    model = Partner
+    template_name = 'partner/delete.html'
+    success_url = reverse_lazy('partner:list')
+    pk_url_kwarg = 'pk'
