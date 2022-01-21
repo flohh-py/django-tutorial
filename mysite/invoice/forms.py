@@ -16,7 +16,7 @@ class InvoiceForm(forms.ModelForm):
                 ]
         widgets = {
                 'code': forms.TextInput(attrs={'class': 'form-control'}),
-                'date': forms.SelectDateWidget(attrs={'class': 'form-control container col'}),
+            'date': forms.DateInput(attrs={'class': 'form-control container col', 'type': 'date'}),
                 'partner': forms.Select(attrs={'class': 'form-control'}),
                 'type': forms.Select(attrs={'class': 'form-control'}),
                 'total': forms.TextInput(attrs={'class': 'form-control'}),

@@ -1,4 +1,4 @@
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
 from .models import Invoice, InvoiceLine
 from .forms import InvoiceForm, InvoiceLineIF

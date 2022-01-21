@@ -2,17 +2,29 @@
 {% load static %}
 {% block content %}
 <br>
-<div class="container mx-auto mt-6">
+<div class="container form-control mx-auto mt-6">
   <h3>Invoice Detail</h3>
-  <div class="form-group row">
-    <div class="form-group col">
-    <a>Code</a>
+  <div class='row'>
+    <div class=' col-6'>
+      {{ invoice.code.label }}
+      {{ invoice.code }}
     </div>
-    <div class="form-group col">
-    {{ invoice.code }}
+    <div class='col-6'>
+      {{ invoice.type.label }}
+      {{ invoice.type }}
     </div>
   </div>
-<br>
+  <div class='row'>
+    <div class='col-6'>
+      {{ invoice.partner.label }}
+      {{ invoice.partner }}
+    </div>
+    <div class='col-6'>
+      {{ invoice.date.label }}
+      {{ invoice.date }}
+    </div>
+  </div>
+  <br>
   <table class="table">
     <thead>
       <th>Code</th>
@@ -34,5 +46,10 @@
       </tr>
     </tbody>
   </table>
+  <div class='row'>
+    <div class='col-2'>
+      <a href="#" class='btn btn-success'>Edit</a>
+    </div>
+  </div>
 </div>
 {% endblock content %}

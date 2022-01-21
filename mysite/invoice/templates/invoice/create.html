@@ -7,26 +7,40 @@
 <div class="container mx-auto mt-6">
   <form method="post">{% csrf_token %}
     <div class="container mx-auto">
-    {{ form.code.label }}
-    {{ form.code }}
-    {{ form.date.label }}
-    <div class="container row">
-    {{ form.date }}
+      <div class='row'>
+        <div class='col-6'>
+          {{ form.code.label }}
+          {{ form.code }}
+        </div>
+        <div class='col-6'>
+          {{ form.type.label }}
+          {{ form.type }}
+        </div>
+      </div>
+      <div class='row'>
+        <div class='col-6'>
+          {{ form.partner.label }}
+          {{ form.partner }}
+        </div>
+        <div class='col-6'>
+          {{ form.date.label }}
+          {{ form.date }}
+        </div>
+      </div>
+      {{ lines.management_form}}
     </div>
-    {{ form.partner.label }}
-    {{ form.partner }}
-    {{ form.type.label }}
-    {{ form.type }}
-    {{ form.total.label }}
-    {{ form.total }}
-    {{ lines.management_form}}
-    </div>
-    <div id="line-form-list">
+    <div id="line-form-list" class='mt-2'>
       {% for line in lines %}
       <div class="line-form">
         {{ line.as_table }}
       </div>
       {% endfor %}
+    </div>
+    <div class='row'>
+      <div class='col-3'>
+        {{ form.total.label }}
+        {{ form.total }}
+      </div>
     </div>
     <div id='empty-form' class='hidden'>{{ lines.empty_form.as_table }}</div>
     <button type="submit" class="btn btn-success">
