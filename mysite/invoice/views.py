@@ -1,7 +1,8 @@
-from django.views.generic import ListView, DetailView, CreateView
-from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView
+from django.views.generic.edit import CreateView, UpdateView
+from django.urls import reverse_lazy, reverse
 from .models import Invoice, InvoiceLine
-from .forms import InvoiceForm, InvoiceLineIF
+from .forms import InvoiceForm, InvoiceLineIF, InvoiceLineForm
 
 
 class InvoiceList(ListView):
@@ -18,10 +19,12 @@ class InvoiceDetail(DetailView):
     pk_url_kwarg = 'pk'
 
     def get_context_data(self, **kwargs):
-            context = super().get_context_data(**kwargs)
-            lines = InvoiceLine.objects.all().filter(invoice=self.kwargs['pk'])
-            context['lines'] = lines
-            return context
+        context = super().get_context_data(**kwargs)
+        lines = InvoiceLine.objects.all().filter(invoice=self.kwargs['pk'])
+        new_line = InvoiceLineForm(initial={'invoice':self.object})
+        context['new_line'] = new_line
+        context['lines'] = lines
+        return context
         
 
 class InvoiceCreate(CreateView):
@@ -50,3 +53,18 @@ class InvoiceCreate(CreateView):
             lines.save()
 
         return super(InvoiceCreate, self).form_valid(form)
+
+
+class InvoiceLineAdd(CreateView):
+    model = InvoiceLine
+    form_class = InvoiceLineForm
+    template_name = 'invoice/detail.html'
+    pk_url_kwarg = 'pk'
+
+    def post(self, request, *args, **kwargs):
+        # invoice = Invoice.objects.get(pk=self.kwargs['pk'])
+        return super(InvoiceLineAdd, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse('invoice:detail', kwargs={'pk':pk})

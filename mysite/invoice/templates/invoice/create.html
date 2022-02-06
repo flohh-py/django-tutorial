@@ -19,22 +19,9 @@
     {{ form.type }}
     {{ form.total.label }}
     {{ form.total }}
-    {{ lines.management_form}}
-    </div>
-    <div id="line-form-list">
-      {% for line in lines %}
-      <div class="line-form">
-        {{ line.as_table }}
-      </div>
-      {% endfor %}
-    </div>
-    <div id='empty-form' class='hidden'>{{ lines.empty_form.as_table }}</div>
     <button type="submit" class="btn btn-success">
       Save
     </button>
-    <button id="add-new" type="button">
-      Add
-      </button>
   </form>
 </div>
 {% endblock content %}

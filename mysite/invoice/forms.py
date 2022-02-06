@@ -28,12 +28,9 @@ class InvoiceLineForm(forms.ModelForm):
         model = InvoiceLine
         fields = '__all__'
 
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     self.fields['product'].queryset = Product.objects.none()
-
-    #     if 'product' in self.data:
-    #         self.fields['product'].queryset = Product.objects.all()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['invoice'].widget = forms.HiddenInput()
 
 
 InvoiceLineIF = inlineformset_factory(
