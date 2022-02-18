@@ -16,7 +16,7 @@ class InvoiceForm(forms.ModelForm):
                 ]
         widgets = {
                 'code': forms.TextInput(attrs={'class': 'form-control'}),
-            'date': forms.DateInput(attrs={'class': 'form-control container col', 'type': 'date'}),
+                'date': forms.DateInput(attrs={'class': 'form-control container col', 'type': 'date'}),
                 'partner': forms.Select(attrs={'class': 'form-control'}),
                 'type': forms.Select(attrs={'class': 'form-control'}),
                 'total': forms.TextInput(attrs={'class': 'form-control'}),
@@ -26,11 +26,15 @@ class InvoiceForm(forms.ModelForm):
 class InvoiceLineForm(forms.ModelForm):
     class Meta:
         model = InvoiceLine
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['invoice'].widget = forms.HiddenInput()
+        fields = [
+            'invoice',
+            'product',
+            'qty',
+            'price'
+        ]
+        widgets = {
+            'invoice': forms.HiddenInput(),
+        }
 
 
 InvoiceLineIF = inlineformset_factory(
