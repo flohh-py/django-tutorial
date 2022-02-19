@@ -10,7 +10,7 @@ from .forms import ProductForm
 class ProductList(ListView):
     model = Product
     template_name = 'product/list.html'
-    paginate_by = 10
+    paginate_by = 8
 
     def is_ajax(self, request):
         return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
