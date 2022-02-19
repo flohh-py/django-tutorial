@@ -24,6 +24,9 @@ class Invoice(models.Model):
     def __str__(self):
         return self.code
 
+    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    #     return super().save(force_insert, force_update, using, update_fields)
+
     class Meta:
         ordering = ['code']
 

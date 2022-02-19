@@ -8,18 +8,14 @@ class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
         fields = [
-                'code',
                 'date',
                 'partner',
                 'type',
-                'total',
                 ]
         widgets = {
-                'code': forms.TextInput(attrs={'class': 'form-control'}),
                 'date': forms.DateInput(attrs={'class': 'form-control container col', 'type': 'date'}),
                 'partner': forms.Select(attrs={'class': 'form-control'}),
                 'type': forms.Select(attrs={'class': 'form-control'}),
-                'total': forms.TextInput(attrs={'class': 'form-control'}),
                 }
 
 

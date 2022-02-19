@@ -3,24 +3,28 @@
 {% block content %}
 <script src="{% static 'js/invoice.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/invoice.css' %}" rel="stylesheet"/>
-<br>
-<div class="container mx-auto mt-6">
+<div class="container form-control mx-auto mt-2">
   <form method="post">{% csrf_token %}
-    <div class="container mx-auto">
-    {{ form.code.label }}
-    {{ form.code }}
-    {{ form.date.label }}
-    <div class="container row">
-    {{ form.date }}
+    <div class="row">
+      <div class="col">
+        {{ form.type.label }}
+        {{ form.type }}
+      </div>
+      <div class="col">
+        {{ form.date.label }}
+        {{ form.date }}
+      </div>
     </div>
-    {{ form.partner.label }}
-    {{ form.partner }}
-    {{ form.type.label }}
-    {{ form.type }}
-    {{ form.total.label }}
-    {{ form.total }}
-    <button type="submit" class="btn btn-success">
-      Save
+    <div class="row">
+      <div class="col">
+        {{ form.partner.label }}
+        {{ form.partner }}
+      </div>
+      <div class="col">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-success mt-2">
+      Create
     </button>
   </form>
 </div>
