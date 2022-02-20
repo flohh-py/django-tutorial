@@ -27,10 +27,12 @@ class Invoice(models.Model):
         return self.code
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        if self.type == 'purchase':
-            self.code = NS.get_series(serie='PINV')
-        if self.type == 'sell':
-            self.code = NS.get_series(serie='SINV')
+        if not self.id:
+            print("CREATE INOVICE")
+            if self.type == 'purchase':
+                self.code = NS.get_series(serie='PINV')
+            if self.type == 'sell':
+                self.code = NS.get_series(serie='SINV')
         return super().save(force_insert, force_update, using, update_fields)
 
     class Meta:

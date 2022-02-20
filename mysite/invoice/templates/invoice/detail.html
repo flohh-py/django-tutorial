@@ -11,8 +11,8 @@
       {{ invoice.date }}
     </div>
     <div class='col-6'>
-      {{ invoice.type.label }}
-      {{ invoice.get_type_display }}
+      {{ invoice.status.label }}
+      {{ invoice.get_status_display }}
     </div>
   </div>
   <div class='row'>
@@ -21,8 +21,8 @@
       {{ invoice.partner }}
     </div>
     <div class='col-6'>
-      {{ invoice.status.label }}
-      {{ invoice.get_status_display }}
+      {{ invoice.type.label }}
+      {{ invoice.get_type_display }}
     </div>
   </div>
   <div class="container form-control mx-auto mt-2">
