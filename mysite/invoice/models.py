@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from product.models import Product
 from partner.models import Partner
+from main.models import NamingSeries as NS
+
 
 INVO_TYPE = [
     ('sell', 'Sell'),
@@ -24,8 +26,12 @@ class Invoice(models.Model):
     def __str__(self):
         return self.code
 
-    # def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-    #     return super().save(force_insert, force_update, using, update_fields)
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.type == 'purchase':
+            self.code = NS.get_series(serie='PINV')
+        if self.type == 'sell':
+            self.code = NS.get_series(serie='SINV')
+        return super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         ordering = ['code']
