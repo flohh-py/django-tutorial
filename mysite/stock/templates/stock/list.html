@@ -1,0 +1,32 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block content %}
+<br>
+<div class="container mx-auto mt-6">
+  <table class="table">
+    <thead>
+      <th>Code</th>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Total</th>
+    </thead>
+    <tbody>
+      {% for stock in object_list %}
+      <tr>
+        <td>{{ stock.code }}</td>
+        <td>{{ stock.date }}</td>
+        <td>{{ stock.type }}</td>
+        <td>{{ stock.total }}</td>
+        <td>
+          <div class="form-group row">
+            <div class="form-group col">
+              <a href="{% url 'stock:detail' pk=stock.id %}" class="btn btn-success form-control col-3 mx-2">Detail</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
