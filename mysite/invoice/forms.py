@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import Invoice, InvoiceLine
-from product.models import Product
 
 
 class InvoiceForm(forms.ModelForm):

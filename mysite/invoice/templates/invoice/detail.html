@@ -4,25 +4,25 @@
 <script src="{% static 'js/invoice.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/invoice.css' %}" rel="stylesheet"/>
 <div class="container form-control mx-auto mt-2">
-  <h3>Invoice {{ invoice.code }}</h3>
+  <h3>Invoice {{ object.code }}</h3>
   <div class='row'>
     <div class=' col-6'>
-      {{ invoice.date.label }}
-      {{ invoice.date }}
+      {{ object.date.label }}
+      {{ object.date }}
     </div>
     <div class='col-6'>
-      {{ invoice.status.label }}
-      {{ invoice.get_status_display }}
+      {{ object.status.label }}
+      {{ object.get_status_display }}
     </div>
   </div>
   <div class='row'>
     <div class='col-6'>
-      {{ invoice.partner.label }}
-      {{ invoice.partner }}
+      {{ object.partner.label }}
+      {{ object.partner }}
     </div>
     <div class='col-6'>
-      {{ invoice.type.label }}
-      {{ invoice.get_type_display }}
+      {{ object.type.label }}
+      {{ object.get_type_display }}
     </div>
   </div>
   <div class="container form-control mx-auto mt-2">
@@ -61,7 +61,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="{% url 'invoice:add_line' pk=invoice.id%}" method='POST'>
+          <form action="{% url 'invoice:add_line' pk=object.id%}" method='POST'>
             {% csrf_token %}
             {{new_line.as_table}}
             <div>
