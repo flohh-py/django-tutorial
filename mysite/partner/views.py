@@ -17,8 +17,9 @@ class PartnerList(ListView):
     def get(self, *args, **kwargs):
         if self.is_ajax(request=self.request):
             ajax_val = self.request.GET['term']
-            prod_obj = Partner.objects.all().filter(name__icontains=ajax_val)
-            partners = list(prod_obj.values())
+            part_obj = Partner.objects.all().filter(name__icontains=ajax_val)
+            print(part_obj)
+            partners = list(part_obj.values())
             return JsonResponse(partners, safe=False)
 
         return super(PartnerList, self).get(*args,**kwargs)
