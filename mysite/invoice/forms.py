@@ -22,13 +22,13 @@ class InvoiceLineForm(forms.ModelForm):
     class Meta:
         model = InvoiceLine
         fields = [
-            'invoice',
+            'parent',
             'product',
             'qty',
             'price'
         ]
         widgets = {
-            'invoice': forms.HiddenInput(),
+            'parent': forms.HiddenInput(),
         }
 
 

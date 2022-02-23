@@ -20,8 +20,8 @@ class InvoiceDetail(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        lines = InvoiceLine.objects.all().filter(invoice=self.kwargs['pk'])
-        new_line = InvoiceLineForm(initial={'invoice':self.object})
+        lines = InvoiceLine.objects.all().filter(parent=self.kwargs['pk'])
+        new_line = InvoiceLineForm(initial={'parent':self.object})
         context['new_line'] = new_line
         context['lines'] = lines
         return context
@@ -47,3 +47,29 @@ class InvoiceLineAdd(CreateView):
     def get_success_url(self):
         pk = self.kwargs['pk']
         return reverse('invoice:detail', kwargs={'pk':pk})
+
+
+class InvoiceUpdate(UpdateView):
+    model = Invoice
+    form_class = InvoiceForm
+    template_name = 'invoice/detail.html'
+    fields = "__all__"
+    pk_url_kwarg = 'pk'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        lines = InvoiceLine.objects.all().filter(parent=self.kwargs['pk'])
+        new_line = InvoiceLineForm(initial={'parent':self.object})
+        context['new_line'] = new_line
+        context['lines'] = lines
+        return context
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        if kwargs.get('process') == 'submit':
+            obj.submit_invoice(obj.id)
+        
+        if kwargs.get('process') == 'cancel':
+            obj.cancel_invoice(obj.id)
+
+        return redirect('invoice:detail', pk=obj.id)

@@ -34,12 +34,54 @@ class Invoice(models.Model):
                 self.code = NS.get_series(serie='SINV')
         return super().save(force_insert, force_update, using, update_fields)
 
+    @classmethod
+    def submit_invoice(cls, id=None):
+        if id:
+            ste = cls.objects.get(pk=id)
+            if InvoiceLine.submit_invoice_lines(ste.id):
+                ste.status = 'submitted'
+                ste.save()
+
+    @classmethod
+    def cancel_invoice(cls, id=None):
+        if id:
+            ste = cls.objects.get(pk=id)
+            ste.status = 'cancelled'
+            ste.save()
+
+    def get_absolute_url(self):
+        return reverse('invoice:detail', args=[self.id])
+
     class Meta:
         ordering = ['code']
 
 
 class InvoiceLine(models.Model):
     product = models.ForeignKey(Product, related_name='product', on_delete=models.CASCADE)
-    invoice = models.ForeignKey(Invoice, related_name='invoice', on_delete=models.CASCADE)
+    parent = models.ForeignKey(Invoice, related_name='parent', on_delete=models.CASCADE, null=True)
     qty = models.FloatField(default=0.0)
     price = models.FloatField(default=0.0)
+    status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
+    total = models.FloatField(default=0.0)
+
+    @classmethod
+    def submit_invoice_lines(cls, parent=None):
+        lines = cls.objects.all().filter(parent=parent)
+        if lines:
+            for line in lines:
+                line.status = 'submitted'
+                line.save()
+                return True
+        else:
+            return False
+
+    @classmethod
+    def cancel_invoice_lines(cls, parent=None):
+        lines = cls.objects.all().filter(parent=parent)
+        if lines:
+            for line in lines:
+                line.status = 'cancelled'
+                line.save()
+                return True
+        else:
+            return False
