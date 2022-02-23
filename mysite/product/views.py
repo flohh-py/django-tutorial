@@ -48,6 +48,16 @@ class ProductDetail(DetailView):
     fields = "__all__"
     pk_url_kwarg = 'pk'
 
+    def is_ajax(self, request):
+        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+    def get(self, *args, **kwargs):
+        if self.is_ajax(request=self.request):
+            prod_data = Product.objects.filter(id=kwargs.get('pk')).values()[0]
+            return JsonResponse(prod_data, safe=False)
+
+        return super(ProductList, self).get(*args,**kwargs)
+
 
 class ProductDelete(DeleteView):
     model = Product
