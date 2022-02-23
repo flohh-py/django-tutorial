@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import inlineformset_factory
 from .models import StockEntry, StockEntryLine
 
 
@@ -25,6 +26,13 @@ class StockEntryLineForm(forms.ModelForm):
             'price'
         ]
         widgets = {
-            'aprent': forms.HiddenInput(),
+            'parent': forms.HiddenInput(),
         }
 
+StockEntryLineIF= inlineformset_factory(
+    StockEntry,
+    StockEntryLine,
+    fields= "__all__",
+    form=StockEntryLineForm,
+    extra= 0,
+)

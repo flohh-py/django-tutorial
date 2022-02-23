@@ -19,8 +19,8 @@
     <div class='col-6'>
     </div>
     <div class='col-6'>
-      {{ stock.type.label }}
-      {{ stock.get_type_display }}
+      {{ object.type.label }}
+      {{ object.get_type_display }}
     </div>
   </div>
   <div class="container form-control mx-auto mt-2">
@@ -46,16 +46,40 @@
       </tbody>
     </table>
   </div>
-  <button id="add-product" type="button" class="btn btn-success mt-2" data-bs-toggle="modal"
-    data-bs-target="#prodAddModal">
-    Add Product
-  </button>
-  <!-- Modal -->
-  <div class="modal fade" id="prodAddModal" tabindex="-1" aria-labelledby="prodAddModal" aria-hidden="true">
+
+  <div class="row">
+    {% if object.status == 'draft' %}
+    <div class="col-6">
+      <button id="add-item-btn" type="button" class="btn btn-primary mt-2" data-bs-toggle="modal"
+        data-bs-target="#itemAddModal">
+        Add Item
+      </button>
+    </div>
+    <div class="col-6">
+        <button id="submit-modal-btn" type="button" class="btn btn-success mt-2 pull-right" data-bs-toggle="modal"
+          data-bs-target="#submitSteModal">
+          Submit
+        </button>
+      </form>
+    </div>
+    {% endif %}
+    {% if object.status == 'submitted' %}
+    <div class="col-12">
+        <button id="cancel-modal-btn" type="button" class="btn btn-danger mt-2 pull-right" data-bs-toggle="modal"
+          data-bs-target="#cancelSteModal">
+          Cancel
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  <div>
+
+  <!-- Item Modal -->
+  <div class="modal fade" id="itemAddModal" tabindex="-1" aria-labelledby="itemAddModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+          <h5 class="modal-title">Add Item</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
@@ -64,6 +88,60 @@
             {{new_line.as_table}}
             <div>
               <button type="submit" class="btn btn-primary mt-2">Add</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Modal -->
+  <div class="modal fade" id="submitSteModal" tabindex="-1" aria-labelledby="submitSteModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Submit ?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'stock:submit' pk=object.id%}" method='POST'>
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-6">
+                <h5> {{ object.code }} </h5>
+              </div>
+              <div class="col-6">
+                <div class="pull-right">
+                  <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Modal -->
+  <div class="modal fade" id="cancelSteModal" tabindex="-1" aria-labelledby="cancelSteModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cancel ?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'stock:cancel' pk=object.id%}" method='POST'>
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-6">
+                <h5> {{ object.code }} </h5>
+              </div>
+              <div class="col-6">
+                <div class="pull-right">
+                  <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+              </div>
             </div>
           </form>
         </div>

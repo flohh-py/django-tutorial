@@ -7,7 +7,7 @@
     <thead>
       <th>Code</th>
       <th>Date</th>
-      <th>Type</th>
+      <th>Status</th>
       <th>Total</th>
     </thead>
     <tbody>
@@ -15,7 +15,7 @@
       <tr>
         <td>{{ stock.code }}</td>
         <td>{{ stock.date }}</td>
-        <td>{{ stock.type }}</td>
+        <td>{{ stock.get_status_display }}</td>
         <td>{{ stock.total }}</td>
         <td>
           <div class="form-group row">
@@ -28,5 +28,45 @@
       {% endfor %}
     </tbody>
   </table>
+  <nav aria-label="Pagination Bar">
+  <ul class="pagination">
+    {% if page_obj.has_previous %}
+      <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+      </li>
+    {% else %}
+      <li class="page-item">
+          <a class="page-link" href="#">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+      </li>
+    {% endif %}
+    <li class="page-item active">
+      <a class="page-link" href="#">{{page_obj.number}}</a>
+    </li>
+
+    {% if page_obj.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% else %}
+      <li class="page-item">
+        <a class="page-link" href="#">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
 </div>
 {% endblock content %}
