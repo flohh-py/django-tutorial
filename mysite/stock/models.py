@@ -41,7 +41,7 @@ class StockEntry(models.Model):
     def submit_stock_entry(cls, id=None):
         if id:
             ste = cls.objects.get(pk=id)
-            if StockEntryLine.submit_stock_lines(ste.id):
+            if StockEntryLine.submit_stock_lines(ste):
                 ste.status = 'submitted'
                 ste.save()
 
@@ -57,7 +57,7 @@ class StockEntry(models.Model):
         return reverse('product:detail', args=[self.id])
 
     class Meta:
-        ordering = ['code']
+        ordering = ['-code']
 
 
 class StockEntryLine(models.Model):
@@ -70,12 +70,13 @@ class StockEntryLine(models.Model):
 
     @classmethod
     def submit_stock_lines(cls, parent=None):
-        lines = cls.objects.all().filter(parent=parent)
+        lines = cls.objects.all().filter(parent=parent.id)
         if lines:
             for line in lines:
-                line.status = 'submitted'
-                line.save()
-                return True
+                if parent.type == 'receipt':
+                    if line.item.update_product_stock(line, type='in'):
+                        line.status = 'submitted'
+            return True
         else:
             return False
 
