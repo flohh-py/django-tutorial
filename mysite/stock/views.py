@@ -68,12 +68,19 @@ class StockEntryUpdate(UpdateView):
 class StockEntryLineCreate(CreateView):
     model = StockEntryLine
     form_class = StockEntryLineForm
-    template_name = 'stock/detail.html'
+    template_name = 'stock/add_line.html'
     pk_url_kwarg = 'pk'
 
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['parent'] = self.kwargs['pk']
+    #     return context
+
     def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse('stock:detail', kwargs={'pk':pk})
+        # pk = self.kwargs['pk']
+        # parent = StockEntry.objects.get(pk=self.kwargs['pk'])
+        parent_id = self.request.POST['parent']
+        return reverse('stock:detail', kwargs={'pk':parent_id})
 
 class StockEntryLineEdit(UpdateView):
     model = StockEntryLine
@@ -88,5 +95,21 @@ class StockEntryLineEdit(UpdateView):
 class StockEntryLineDelete(DeleteView):
     model = StockEntryLine
     form_class = StockEntryLineForm
-    template_name = 'stock/detail.html'
+    template_name = 'stock/delete_line.html'
     pk_url_kwarg = 'pk'
+
+
+    def delete(self, request, *args, **kwargs):
+        print("DELETE EVENT")
+        print(self)
+        return super().delete(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        print("GET context DATA")
+        context = super().get_context_data(**kwargs)
+        return context
+
+    def get_success_url(self):
+        parent_id = self.request.POST['parent']
+        print(parent_id)
+        return reverse('stock:detail', kwargs={'pk':parent_id})

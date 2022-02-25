@@ -1,6 +1,6 @@
 $(document).ready(function() {
   $("#id_item").select2({
-    dropdownParent: $('#itemAddModal'),
+    dropdownParent: $('#itemModal'),
     ajax: {
       url: "/product/",
       dataType: "json",
@@ -24,9 +24,23 @@ $(document).ready(function() {
     })
   })
 });
-function edit(id) {
+function edit_line(id) {
   $.get("/stock/edit_line/" + id, function(data) {
-    $("#modal-edit-line-body").html(data)
+    $("#item-modal-body").html(data)
   })
-  $("#itemEditModal").modal("toggle");
+  $("#itemModal").modal("toggle");
+}
+function add_line(id) {
+  $.get("/stock/add_line/", function(data) {
+    $("#item-modal-body").html(data)
+    $("#id_parent").val(id)
+  })
+  $("#itemModal").modal("toggle");
+}
+function delete_line(id) {
+  $.get("/stock/delete_line/" + id, function(data) {
+    $("#item-modal-body").html(data)
+    $("#id_parent").val(id)
+  })
+  $("#itemModal").modal("toggle");
 }

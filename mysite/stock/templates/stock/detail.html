@@ -40,12 +40,12 @@
           <td style="width:20%;">{{ line.price }}</td>
           <td style="width:10%;">
             <div>
-              <button onclick="edit({{line.id}}) "type="button" class="btn btn-primary pull-right" 
-                data-bs-toggle="modal" data-bs-target="#itemEditModal">
+              <button onclick="edit_line({{line.id}}) "type="button" class="btn btn-primary pull-right" >
+                <!-- data-bs-toggle="modal" data-bs-target="#itemEditModal"> -->
                 E
               </button>
-              <button type="button" class="btn btn-danger pull-right" data-bs-toggle="modal"
-                data-bs-target="#itemDeleteModal">
+              <button onclick="delete_line({{line.id}})" type="button" class="btn btn-danger pull-right">
+                <!-- data-bs-toggle="modal" data-bs-target="#itemDeleteModal"> -->
                 D
               </button>
             </div>
@@ -64,8 +64,8 @@
   <div class="row">
     {% if object.status == 'draft' %}
     <div class="col-6">
-      <button id="add-item-btn" type="button" class="btn btn-primary mt-2" data-bs-toggle="modal"
-        data-bs-target="#itemAddModal">
+      <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary mt-2">
+        <!-- data-bs-toggle="modal" data-bs-target="#itemModal"> -->
         Add Item
       </button>
     </div>
@@ -89,42 +89,18 @@
   <div>
 
   <!-- Item Modal -->
-  <div class="modal fade" id="itemAddModal" tabindex="-1" aria-labelledby="itemAddModal" aria-hidden="true">
+  <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Add Item</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body">
-          <form action="{% url 'stock:add_line' pk=object.id %}" method='POST'>
-            {% csrf_token %}
-            {{new_line.as_table}}
-            <div>
-              <button type="submit" class="btn btn-primary mt-2">Add</button>
-            </div>
-          </form>
+        <div class="modal-body" id="item-modal-body">
+          <!-- FORM -->
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="modal fade" id="itemEditModal" tabindex="-1" aria-labelledby="itemEditModal" aria-hidden="true">
-<div class="modal-dialog modal-lg">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title">Edit Item</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body" id="modal-edit-line-body">
-      {#{% include 'main/navbar.html' %}#}
-      {#
-      {% block add_line %}
-      {% endblock add_line %}
-      #}
-    </div>
-  </div>
-</div>
   </div>
 
   <!-- Submit Modal -->
