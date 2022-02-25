@@ -33,14 +33,13 @@ function edit_line(id) {
 function add_line(id) {
   $.get("/stock/add_line/", function(data) {
     $("#item-modal-body").html(data)
-    $("#id_parent").val(id)
+    $("#id_parent").val(id) //gambiarra?
   })
   $("#itemModal").modal("toggle");
 }
 function delete_line(id) {
   $.get("/stock/delete_line/" + id, function(data) {
     $("#item-modal-body").html(data)
-    $("#id_parent").val(id)
   })
   $("#itemModal").modal("toggle");
 }

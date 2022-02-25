@@ -94,22 +94,8 @@ class StockEntryLineEdit(UpdateView):
 
 class StockEntryLineDelete(DeleteView):
     model = StockEntryLine
-    form_class = StockEntryLineForm
     template_name = 'stock/delete_line.html'
     pk_url_kwarg = 'pk'
 
-
-    def delete(self, request, *args, **kwargs):
-        print("DELETE EVENT")
-        print(self)
-        return super().delete(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        print("GET context DATA")
-        context = super().get_context_data(**kwargs)
-        return context
-
     def get_success_url(self):
-        parent_id = self.request.POST['parent']
-        print(parent_id)
-        return reverse('stock:detail', kwargs={'pk':parent_id})
+        return reverse('stock:detail', kwargs={'pk':self.object.parent.id})
