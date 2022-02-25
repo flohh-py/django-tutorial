@@ -1,0 +1,12 @@
+{% load static %}
+{% block add_line %}
+<script src="{% static 'js/stock.js' %}" type="text/javascript"></script>
+<link href="{% static 'css/stock.css' %}" rel="stylesheet" />
+<form action="{% url 'stock:edit_line' pk=object.id %}" method='POST'>
+        {% csrf_token %}
+        {{form.as_table}}
+        <div>
+          <button type="submit" class="btn btn-primary mt-2">Save</button>
+        </div>
+      </form>
+{% endblock add_line %}

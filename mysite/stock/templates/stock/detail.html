@@ -24,18 +24,32 @@
     </div>
   </div>
   <div class="container form-control mx-auto mt-2">
-    <table class="table">
+    <table class="table" style="with:100%;">
       <thead>
         <th>Code</th>
         <th>QTY</th>
         <th>Price</th>
+        <th></th>
       </thead>
       <tbody>
         {% for line in lines %}
         <tr>
-          <td>{{ line.item }}</td>
-          <td>{{ line.qty }}</td>
-          <td>{{ line.price }}</td>
+          <td class="hidden">{{ line.id }}</td>
+          <td style="width:50%;">{{ line.item }}</td>
+          <td style="width:20%;">{{ line.qty }}</td>
+          <td style="width:20%;">{{ line.price }}</td>
+          <td style="width:10%;">
+            <div>
+              <button onclick="edit({{line.id}}) "type="button" class="btn btn-primary pull-right" 
+                data-bs-toggle="modal" data-bs-target="#itemEditModal">
+                E
+              </button>
+              <button type="button" class="btn btn-danger pull-right" data-bs-toggle="modal"
+                data-bs-target="#itemDeleteModal">
+                D
+              </button>
+            </div>
+          </td>
         </tr>
         {% endfor %}
         <tr>
@@ -93,6 +107,24 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="modal fade" id="itemEditModal" tabindex="-1" aria-labelledby="itemEditModal" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Edit Item</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    <div class="modal-body" id="modal-edit-line-body">
+      {#{% include 'main/navbar.html' %}#}
+      {#
+      {% block add_line %}
+      {% endblock add_line %}
+      #}
+    </div>
+  </div>
+</div>
   </div>
 
   <!-- Submit Modal -->

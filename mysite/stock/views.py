@@ -1,5 +1,5 @@
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from .models import StockEntry, StockEntryLine
@@ -35,36 +35,25 @@ class StockEntryCreate(CreateView):
     success_url = reverse_lazy('stock:list')
 
 
-class StockEntryLineAdd(CreateView):
-    model = StockEntryLine
-    form_class = StockEntryLineForm
-    template_name = 'stock/detail.html'
-    pk_url_kwarg = 'pk'
-
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse('stock:detail', kwargs={'pk':pk})
-
-
 class StockEntryUpdate(UpdateView):
     model = StockEntry
     form_class = StockEntryForm
+    formset_class = StockEntryLineIF
     template_name = 'stock/detail.html'
-    # fields = "__all__"
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('stock:detail')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        lines = StockEntryLine.objects.all().filter(parent=self.kwargs['pk'])
-        new_line = StockEntryLineForm(initial={'parent':self.object})
-        context['new_line'] = new_line
-        context['lines'] = lines
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     lines = StockEntryLine.objects.all().filter(parent=self.kwargs['pk'])
+    #     new_line = StockEntryLineForm(initial={'parent':self.object})
+    #     context['new_line'] = new_line
+    #     context['lines'] = lines
+    #     return context
 
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse('stock:detail', kwargs={'pk':pk})
+    # def get_success_url(self):
+    #     pk = self.kwargs['pk']
+    #     return reverse('stock:detail', kwargs={'pk':pk})
 
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
@@ -75,3 +64,29 @@ class StockEntryUpdate(UpdateView):
             obj.cancel_stock_entry(obj.id)
 
         return redirect('stock:detail', pk=obj.id)
+
+class StockEntryLineCreate(CreateView):
+    model = StockEntryLine
+    form_class = StockEntryLineForm
+    template_name = 'stock/detail.html'
+    pk_url_kwarg = 'pk'
+
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse('stock:detail', kwargs={'pk':pk})
+
+class StockEntryLineEdit(UpdateView):
+    model = StockEntryLine
+    form_class = StockEntryLineForm
+    template_name = 'stock/edit_line.html'
+    pk_url_kwarg = 'pk'
+
+    def get_success_url(self):
+        line = StockEntryLine.objects.get(pk=self.kwargs['pk'])
+        return reverse('stock:detail', kwargs={'pk':line.parent.id})
+
+class StockEntryLineDelete(DeleteView):
+    model = StockEntryLine
+    form_class = StockEntryLineForm
+    template_name = 'stock/detail.html'
+    pk_url_kwarg = 'pk'

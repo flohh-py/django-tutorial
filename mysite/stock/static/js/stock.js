@@ -11,10 +11,6 @@ $(document).ready(function() {
           })
         };
       },
-      selecting: function(data) {
-        console.log("TEST ON SELECT")
-        console.log(data)
-      }
     },
     minimumInputLength: 2
   });
@@ -28,3 +24,9 @@ $(document).ready(function() {
     })
   })
 });
+function edit(id) {
+  $.get("/stock/edit_line/" + id, function(data) {
+    $("#modal-edit-line-body").html(data)
+  })
+  $("#itemEditModal").modal("toggle");
+}
