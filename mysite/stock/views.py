@@ -32,7 +32,9 @@ class StockEntryCreate(CreateView):
     model = StockEntry
     form_class = StockEntryForm
     template_name = 'stock/create.html'
-    success_url = reverse_lazy('stock:list')
+
+    def get_success_url(self):
+        return reverse('stock:detail', kwargs={'pk':self.object.id})
 
 
 class StockEntryUpdate(UpdateView):

@@ -1,6 +1,8 @@
 from django.urls import reverse
 from django.db import models
 from product.models import Product
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 from main.models import NamingSeries as NS
 
 ENTRY_STATUS = [
@@ -20,7 +22,7 @@ class StockEntry(models.Model):
     date = models.DateField(null=True)
     type = models.CharField(choices=ENTRY_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
-    total = models.FloatField(default=0.0)
+    total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     def __str__(self):
         return self.code
@@ -52,6 +54,18 @@ class StockEntry(models.Model):
             ste.status = 'cancelled'
             ste.save()
 
+    @classmethod
+    def calculate_total(cls, id=None):
+        if id:
+            total = 0
+            lines = StockEntryLine.objects.filter(parent=id)
+            for line in lines:
+                total += line.total
+            ste = cls.objects.get(pk=id)
+            ste.total = total
+            ste.save()
+            
+
     def get_absolute_url(self):
         # return 'prduct:list', (), {'slug': self.slug}
         return reverse('product:detail', args=[self.id])
@@ -63,10 +77,14 @@ class StockEntry(models.Model):
 class StockEntryLine(models.Model):
     item = models.ForeignKey(Product, related_name='item', on_delete=models.CASCADE)
     parent = models.ForeignKey(StockEntry, related_name='parent', on_delete=models.CASCADE)
-    qty = models.FloatField(default=0.0)
-    price = models.FloatField(default=0.0)
+    qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
+    price = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
+    total = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
 
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.total = self.qty * self.price
+        return super().save(force_insert, force_update, using, update_fields)
 
     @classmethod
     def submit_stock_lines(cls, parent=None):
@@ -90,3 +108,11 @@ class StockEntryLine(models.Model):
                 return True
         else:
             return False
+
+@receiver(post_save, sender=StockEntryLine)
+def calculate_lines(sender, instance, **kwargs):
+    instance.parent.calculate_total(instance.parent.id)
+
+@receiver(post_delete, sender=StockEntryLine)
+def calculate_lines(sender, instance, **kwargs):
+    instance.parent.calculate_total(instance.parent.id)
