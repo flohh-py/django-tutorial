@@ -1,6 +1,6 @@
 $(document).ready(function() {
-  $("#id_product").select2({
-    dropdownParent: $('#itemAddModal'),
+  $("#id_item").select2({
+    dropdownParent: $('#itemModal'),
     ajax: {
       url: "/product/",
       dataType: "json",
@@ -14,10 +14,10 @@ $(document).ready(function() {
     },
     minimumInputLength: 2
   });
-  $("#id_product").on("select2:select", function(e) {
+  $("#id_item").on("select2:select", function(e) {
     $.ajax({
       type: "GET",
-      url: "/product/detail/" + $("#id_product").select2('data')[0].id
+      url: "/product/detail/" + $("#id_item").select2('data')[0].id
     }).then(function(data) {
       $("#id_qty").val(1.0)
       $("#id_price").val(data.price)
@@ -38,55 +38,23 @@ $(document).ready(function() {
     },
     minimumInputLength: 2
   });
-  // $("#id_invoice-0-product").select2({
-  //   ajax: {
-  //     url: "/product/",
-  //     dataType: "json",
-  //     processResults: function(data) {
-  //       return {
-  //         results: $.map(data, function(r) {
-  //           return { id: r.id, text: r.code };
-  //         })
-  //       };
-  //     }
-  //   },
-  //   minimumInputLength: 2
-  // });
-  // $("#add-new").click(function(event) {
-  //   if (event) {
-  //     event.preventDefault()
-  //   }
-  //   let targetForm = $("#line-form-list")
-  //   let countFrom = $(".line-form").length
-  //   let emptyForm = $("#empty-form").clone(true)
-
-  //   emptyForm.removeAttr('data-select2-id')
-  //   emptyForm.removeAttr('id')
-  //   emptyForm.find('option').removeAttr('data-select2-id')
-  //   emptyForm.find('span').remove()
-
-  //   emptyForm.attr("class", "line-form");
-  //   emptyForm.attr("id", "line-form-" + countFrom);
-
-  //   let regex = new RegExp("__prefix__", "g")
-  //   let rep = emptyForm.html();
-  //   emptyForm.html(rep.replace(regex, countFrom))
-  //   $("#id_invoice-TOTAL_FORMS").attr("value", countFrom + 1)
-  //   targetForm.append(emptyForm)
-
-  //   $(`#id_invoice-${countFrom}-product`).select2({
-  //     ajax: {
-  //       url: "/product/",
-  //       dataType: "json",
-  //       processResults: function(data) {
-  //         return {
-  //           results: $.map(data, function(r) {
-  //             return { id: r.id, text: r.code };
-  //           })
-  //         };
-  //       }
-  //     },
-  //     minimumInputLength: 2
-  //   });
-  // });
 });
+function edit_line(id) {
+  $.get("/invoice/edit_line/" + id, function(data) {
+    $("#item-modal-body").html(data)
+  })
+  $("#itemModal").modal("toggle");
+}
+function add_line(id) {
+  $.get("/invoice/add_line/", function(data) {
+    $("#item-modal-body").html(data)
+    $("#id_parent").val(id) //gambiarra?
+  })
+  $("#itemModal").modal("toggle");
+}
+function delete_line(id) {
+  $.get("/invoice/delete_line/" + id, function(data) {
+    $("#item-modal-body").html(data)
+  })
+  $("#itemModal").modal("toggle");
+}

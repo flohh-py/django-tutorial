@@ -84,6 +84,7 @@ class StockEntryLineCreate(CreateView):
         parent_id = self.request.POST['parent']
         return reverse('stock:detail', kwargs={'pk':parent_id})
 
+
 class StockEntryLineEdit(UpdateView):
     model = StockEntryLine
     form_class = StockEntryLineForm
@@ -93,6 +94,7 @@ class StockEntryLineEdit(UpdateView):
     def get_success_url(self):
         line = StockEntryLine.objects.get(pk=self.kwargs['pk'])
         return reverse('stock:detail', kwargs={'pk':line.parent.id})
+
 
 class StockEntryLineDelete(DeleteView):
     model = StockEntryLine

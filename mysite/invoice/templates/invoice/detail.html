@@ -28,16 +28,27 @@
   <div class="container form-control mx-auto mt-2">
     <table class="table">
       <thead>
-        <th>Code</th>
-        <th>QTY</th>
-        <th>Price</th>
+        <th style="width:50%">Code</th>
+        <th style="width:20%">QTY</th>
+        <th style="width:20%">Price</th>
+        <th style="width:10%"></th>
       </thead>
       <tbody>
         {% for line in lines %}
         <tr>
-          <td>{{ line.product }}</td>
-          <td>{{ line.qty }}</td>
-          <td>{{ line.price }}</td>
+          <td class="hidden">{{ line.id }}</td>
+          <td style="width:50%">{{ line.item }}</td>
+          <td style="width:20%">{{ line.qty }}</td>
+          <td style="width:20%">{{ line.price }}</td>
+          <td style="width:10%">
+            <div>
+              <button onclick="edit_line({{line.id}})" type="button" class="btn btn-primary pull-right">
+                E
+              </button>
+              <button onclick="delete_line({{line.id}})" type="button" class="btn btn-danger pull-right">
+                D
+              </button>
+          </td>
         </tr>
         {% endfor %}
         <tr>
@@ -48,29 +59,102 @@
       </tbody>
     </table>
   </div>
-  <button id="add-product" type="button" class="btn btn-success mt-2"
-    data-bs-toggle="modal" data-bs-target="#itemAddModal">
-    Add Product
-  </button>
-  <!-- Modal -->
-  <div class="modal fade" id="itemAddModal" tabindex="-1" aria-labelledby="itemAddModal" aria-hidden="true">
+
+  <div class="row">
+    {% if object.status == 'draft' %}
+    <div class="col-6">
+      <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary mt-2">
+        <!-- data-bs-toggle="modal" data-bs-target="#itemModal"> -->
+        Add Item
+      </button>
+    </div>
+    <div class="col-6">
+        <button id="submit-modal-btn" type="button" class="btn btn-success mt-2 pull-right" data-bs-toggle="modal"
+          data-bs-target="#submitInvoiceModal">
+          Submit
+        </button>
+      </form>
+    </div>
+    {% endif %}
+    {% if object.status == 'submitted' %}
+    <div class="col-12">
+        <button id="cancel-modal-btn" type="button" class="btn btn-danger mt-2 pull-right" data-bs-toggle="modal"
+          data-bs-target="#cancelInvoiceModal">
+          Cancel
+        </button>
+      </form>
+    </div>
+    {% endif %}
+  <div>
+
+  <!-- Item Modal -->
+  <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Product</h5>
+          <h5 class="modal-title">Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="item-modal-body">
+          <!-- FORM -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit Modal -->
+  <div class="modal fade" id="submitInvoiceModal" tabindex="-1" aria-labelledby="submitInvoiceModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Submit ?</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="{% url 'invoice:add_line' pk=object.id%}" method='POST'>
+          <form action="{% url 'invoice:submit' pk=object.id%}" method='POST'>
             {% csrf_token %}
-            {{new_line.as_table}}
-            <div>
-              <button type="submit" class="btn btn-primary mt-2">Add</button>
+            <div class="row">
+              <div class="col-6">
+                <h5> {{ object.code }} </h5>
+              </div>
+              <div class="col-6">
+                <div class="pull-right">
+                  <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+              </div>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Cancel Modal -->
+  <div class="modal fade" id="cancelInvoiceModal" tabindex="-1" aria-labelledby="cancelSteModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Cancel ?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{% url 'invoice:cancel' pk=object.id%}" method='POST'>
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-6">
+                <h5> {{ object.code }} </h5>
+              </div>
+              <div class="col-6">
+                <div class="pull-right">
+                  <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 {% endblock content %}

@@ -1,7 +1,7 @@
 .hidden {
   display: none;
 }
-#id_product {
+#id_item {
     width: 250;
 }
 #id_qty {
@@ -9,4 +9,7 @@
 }
 #id_price {
     width: 150;
+}
+.pull-right {
+  float:right;
 }

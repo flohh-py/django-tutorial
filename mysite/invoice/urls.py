@@ -9,5 +9,8 @@ urlpatterns = [
     path('submit/<int:pk>', InvoiceUpdate.as_view(), {'process': 'submit'}, name='submit'),
     path('cancel/<int:pk>', InvoiceUpdate.as_view(), {'process': 'cancel'}, name='cancel'),
     path('create/', InvoiceCreate.as_view(), name='create'),
-    path('add_line/<int:pk>', InvoiceLineAdd.as_view(), name='add_line'),
+
+    path('add_line/', InvoiceLineCreate.as_view(), name='add_line'),
+    path('delete_line/<int:pk>', InvoiceLineDelete.as_view(), name='delete_line'),
+    path('edit_line/<int:pk>', InvoiceLineEdit.as_view(), name='edit_line'),
 ]

@@ -23,7 +23,7 @@ class InvoiceLineForm(forms.ModelForm):
         model = InvoiceLine
         fields = [
             'parent',
-            'product',
+            'item',
             'qty',
             'price'
         ]

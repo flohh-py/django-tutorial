@@ -1,6 +1,7 @@
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
+from django.shortcuts import redirect
 from .models import Invoice, InvoiceLine
 from .forms import InvoiceForm, InvoiceLineIF, InvoiceLineForm
 
@@ -33,20 +34,8 @@ class InvoiceCreate(CreateView):
     template_name = 'invoice/create.html'
     success_url = reverse_lazy('invoice:list')
 
-
-class InvoiceLineAdd(CreateView):
-    model = InvoiceLine
-    form_class = InvoiceLineForm
-    template_name = 'invoice/detail.html'
-    pk_url_kwarg = 'pk'
-
-    def post(self, request, *args, **kwargs):
-        # invoice = Invoice.objects.get(pk=self.kwargs['pk'])
-        return super(InvoiceLineAdd, self).post(request, *args, **kwargs)
-
     def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse('invoice:detail', kwargs={'pk':pk})
+        return reverse('invoice:detail', kwargs={'pk':self.object.id})
 
 
 class InvoiceUpdate(UpdateView):
@@ -73,3 +62,37 @@ class InvoiceUpdate(UpdateView):
             obj.cancel_invoice(obj.id)
 
         return redirect('invoice:detail', pk=obj.id)
+
+
+class InvoiceLineCreate(CreateView):
+    model = InvoiceLine
+    form_class = InvoiceLineForm
+    template_name = 'invoice/add_line.html'
+    pk_url_kwarg = 'pk'
+
+    def post(self, request, *args, **kwargs):
+        return super(InvoiceLineCreate, self).post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        pk = self.request.POST['parent']
+        return reverse('invoice:detail', kwargs={'pk':pk})
+
+
+class InvoiceLineEdit(UpdateView):
+    model = InvoiceLine
+    form_class = InvoiceLineForm
+    template_name = 'invoice/edit_line.html'
+    pk_url_kwarg = 'pk'
+
+    def get_success_url(self):
+        line = InvoiceLine.objects.get(pk=self.kwargs['pk'])
+        return reverse('invoice:detail', kwargs={'pk':line.parent.id})
+
+
+class InvoiceLineDelete(DeleteView):
+    model = InvoiceLine
+    template_name = 'invoice/delete_line.html'
+    pk_url_kwarg = 'pk'
+
+    def get_success_url(self):
+        return reverse('invoice:detail', kwargs={'pk':self.object.parent.id})
