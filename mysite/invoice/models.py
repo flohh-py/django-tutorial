@@ -2,6 +2,7 @@ from django.db import models
 from django.urls import reverse
 from product.models import Product
 from partner.models import Partner
+from stock.models import StockEntry
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from main.models import NamingSeries as NS
@@ -29,7 +30,7 @@ class Invoice(models.Model):
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
-    stocK_entry = models.ForeignKey(Partner, related_name='stocK_entry', on_delete=models.CASCADE, null=True)
+    stocK_entry = models.ForeignKey(StockEntry, related_name='stocK_entry', on_delete=models.CASCADE, null=True)
     stock_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
     outstanding = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 

@@ -13,8 +13,8 @@ class Main(models.Model):
 class NamingSeries(models.Model):
     serie = models.CharField(max_length=10)
     type = models.CharField(choices=NAMING_TYPE, default='default', null=True, max_length=10)
-    number = models.IntegerField(max_length=10, default=1)
-    fill = models.IntegerField(max_length=1, default=4)
+    number = models.IntegerField(default=1)
+    fill = models.IntegerField(default=4)
 
     @classmethod
     def get_series(cls, serie=None, type='default'):
