@@ -2,7 +2,6 @@ from django.db import models
 from django.urls import reverse
 from product.models import Product
 from partner.models import Partner
-from stock.models import StockEntry
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from main.models import NamingSeries as NS
@@ -26,12 +25,11 @@ STOCK_STATUS = [
 class Invoice(models.Model):
     code = models.CharField(max_length=10, null=True)
     date = models.DateField(null=True)
-    partner = models.ForeignKey(Partner, related_name='partner', on_delete=models.CASCADE, null=True)
+    partner = models.ForeignKey(Partner, related_name='invoice_partner', on_delete=models.CASCADE, null=True)
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
-    stocK_entry = models.ForeignKey(StockEntry, related_name='stocK_entry', on_delete=models.CASCADE, null=True)
-    stock_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
+    qty_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
     outstanding = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     def __str__(self):
@@ -81,8 +79,8 @@ class Invoice(models.Model):
 
 
 class InvoiceLine(models.Model):
-    item = models.ForeignKey(Product, related_name='product', on_delete=models.CASCADE)
-    parent = models.ForeignKey(Invoice, related_name='invoice', on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Product, related_name='invoice_line_item', on_delete=models.CASCADE)
+    parent = models.ForeignKey(Invoice, related_name='invoice_line_parent', on_delete=models.CASCADE, null=True)
     qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)

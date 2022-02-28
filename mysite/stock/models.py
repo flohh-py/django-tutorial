@@ -1,6 +1,7 @@
 from django.urls import reverse
 from django.db import models
 from product.models import Product
+from invoice.models import Invoice
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from main.models import NamingSeries as NS
@@ -23,6 +24,7 @@ class StockEntry(models.Model):
     type = models.CharField(choices=ENTRY_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
+    parent = models.ForeignKey(Invoice, related_name='ste_parent', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.code
@@ -75,8 +77,8 @@ class StockEntry(models.Model):
 
 
 class StockEntryLine(models.Model):
-    item = models.ForeignKey(Product, related_name='item', on_delete=models.CASCADE)
-    parent = models.ForeignKey(StockEntry, related_name='parent', on_delete=models.CASCADE)
+    item = models.ForeignKey(Product, related_name='str_line_item', on_delete=models.CASCADE)
+    parent = models.ForeignKey(StockEntry, related_name='ste_line_parent', on_delete=models.CASCADE)
     qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
