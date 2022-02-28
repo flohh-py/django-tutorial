@@ -110,9 +110,9 @@ class StockEntryLine(models.Model):
             return False
 
 @receiver(post_save, sender=StockEntryLine)
-def calculate_lines(sender, instance, **kwargs):
+def save_calculate_ste_lines(sender, instance, **kwargs):
     instance.parent.calculate_total(instance.parent.id)
 
 @receiver(post_delete, sender=StockEntryLine)
-def calculate_lines(sender, instance, **kwargs):
+def delete_calculate_str_lines(sender, instance, **kwargs):
     instance.parent.calculate_total(instance.parent.id)

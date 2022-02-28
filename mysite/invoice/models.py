@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from product.models import Product
 from partner.models import Partner
+from django.dispatch import receiver
+from django.db.models.signals import post_save, post_delete
 from main.models import NamingSeries as NS
 
 
@@ -37,21 +39,33 @@ class Invoice(models.Model):
     @classmethod
     def submit_invoice(cls, id=None):
         if id:
-            ste = cls.objects.get(pk=id)
+            invo = cls.objects.get(pk=id)
             if InvoiceLine.submit_invoice_lines(ste.id):
-                ste.status = 'submitted'
-                ste.save()
+                invo.status = 'submitted'
+                invo.save()
 
     @classmethod
     def cancel_invoice(cls, id=None):
         if id:
-            ste = cls.objects.get(pk=id)
-            ste.status = 'cancelled'
-            ste.save()
+            invo = cls.objects.get(pk=id)
+            invo.status = 'cancelled'
+            invo.save()
 
     def get_absolute_url(self):
         return reverse('invoice:detail', args=[self.id])
 
+    @classmethod
+    def calculate_total(cls, id):
+        if id:
+            total = 0
+            lines = InvoiceLine.objects.filter(parent=id)
+            for line in lines:
+                total += line.total
+
+            invo = cls.objects.get(pk=id)
+            invo.total = total
+            invo.save()
+            
     class Meta:
         ordering = ['code']
 
@@ -64,6 +78,10 @@ class InvoiceLine(models.Model):
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        self.total = self.qty * self.price
+        return super().save(force_insert, force_update, using, update_fields)
 
     @classmethod
     def submit_invoice_lines(cls, parent=None):
@@ -86,3 +104,12 @@ class InvoiceLine(models.Model):
                 return True
         else:
             return False
+
+
+@receiver(post_save, sender=InvoiceLine)
+def save_calculate_inv_lines(sender, instance, **kwargs):
+    instance.parent.calculate_total(instance.parent.id)
+
+@receiver(post_save, sender=InvoiceLine)
+def delete_calculate_inv_lines(sender, instance, **kwargs):
+    instance.parent.calculate_total(instance.parent.id)
