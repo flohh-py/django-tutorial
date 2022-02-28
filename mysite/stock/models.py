@@ -105,7 +105,7 @@ class StockEntryLine(models.Model):
             for line in lines:
                 line.status = 'cancelled'
                 line.save()
-                return True
+            return True
         else:
             return False
 

@@ -41,13 +41,13 @@
           <td style="width:20%">{{ line.qty }}</td>
           <td style="width:20%">{{ line.price }}</td>
           <td style="width:10%">
-            <div>
-              <button onclick="edit_line({{line.id}})" type="button" class="btn btn-primary pull-right">
-                E
-              </button>
-              <button onclick="delete_line({{line.id}})" type="button" class="btn btn-danger pull-right">
-                D
-              </button>
+            <div class="pull-right">
+              <a onclick="edit_line({{line.id}})" type="button" class="material-icons">
+                edit 
+              </a>
+              <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
+                delete
+              </a>
           </td>
         </tr>
         {% endfor %}

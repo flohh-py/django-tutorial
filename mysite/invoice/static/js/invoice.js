@@ -28,6 +28,13 @@ $(document).ready(function() {
     ajax: {
       url: "/partner/",
       dataType: "json",
+      data: function name(params) {
+        invo_type = $("#id_type").val()
+        return {
+          type: invo_type,
+          term: params.term
+        }
+      },
       processResults: function(data) {
         return {
           results: $.map(data, function(r) {

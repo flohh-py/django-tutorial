@@ -2,26 +2,41 @@
 {% load static %}
 {% block content %}
 <br>
-<div class="container mx-auto mt-6">
+<div class="container mx-auto mt-2">
   <table class="table">
     <thead>
-      <th>Code</th>
-      <th>Date</th>
-      <th>Type</th>
-      <th>Total</th>
+      <th style="width:15%">Code</th>
+      <th style="width:15%">Date</th>
+      <th style="width:30%">Partner</th>
+      <th style="width:10%" class="text-center">Type</th>
+      <th style="width:10%" class="text-center">Status</th>
+      <th style="width:10%">Total</th>
+      <th style="width:10%"></th>
     </thead>
     <tbody>
       {% for invoice in object_list %}
       <tr>
-        <td>{{ invoice.code }}</td>
-        <td>{{ invoice.date }}</td>
-        <td>{{ invoice.type }}</td>
-        <td>{{ invoice.total }}</td>
-        <td>
-          <div class="form-group row">
-            <div class="form-group col">
-              <a href="{% url 'invoice:detail' pk=invoice.id %}" class="btn btn-success form-control col-3 mx-2">Detail</a>
-            </div>
+        <td style="width:15%">{{ invoice.code }}</td>
+        <td style="width:15%">{{ invoice.date }}</td>
+        <td style="width:30%">{{ invoice.partner }}</td>
+        <td style="width:10%" class="text-center">{{ invoice.get_type_display }}</td>
+        <td style="width:10%">
+          {% if invoice.status == 'draft' %}
+            <div class="bg-secondary text-white text-center form-control">
+          {% elif invoice.status == 'submitted' %}
+            <div class="bg-primary text-white text-center form-control">
+          {% elif invoice.status == 'cancelled' %}
+            <div class="bg-danger text-white text-center form-control">
+          {% endif %}
+            {{ invoice.get_status_display }}
+          </div>
+        </td>
+        <td style="width:10%">{{ invoice.total }}</td>
+        <td style="width:10%">
+          <div class="text-end">
+            <a href="{% url 'invoice:detail' pk=invoice.id %}" Type="button" class="material-icons">
+              file_open
+            </a>
           </div>
         </td>
       </tr>
