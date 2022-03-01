@@ -25,7 +25,7 @@ STOCK_STATUS = [
 class Invoice(models.Model):
     code = models.CharField(max_length=10, null=True)
     date = models.DateField(null=True)
-    partner = models.ForeignKey(Partner, related_name='invoice_partner', on_delete=models.CASCADE, null=True)
+    partner = models.ForeignKey(Partner, related_name='invoice_partner', on_delete=models.SET_NULL, null=True)
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
@@ -80,8 +80,8 @@ class Invoice(models.Model):
 
 
 class InvoiceLine(models.Model):
-    item = models.ForeignKey(Product, related_name='invoice_line_item', on_delete=models.CASCADE)
-    parent = models.ForeignKey(Invoice, related_name='invoice_line_parent', on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Product, related_name='invoice_line_item', on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey(Invoice, related_name='invoice_line_parent', on_delete=models.SET_NULL, null=True)
     qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
