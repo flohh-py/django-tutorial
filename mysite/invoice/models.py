@@ -30,6 +30,7 @@ class Invoice(models.Model):
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     qty_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
+    # pay_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
     outstanding = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     def __str__(self):

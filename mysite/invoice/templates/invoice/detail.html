@@ -3,93 +3,135 @@
 {% block content %}
 <script src="{% static 'js/invoice.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/invoice.css' %}" rel="stylesheet"/>
-<div class="container form-control mx-auto mt-2">
-  <div class="row">
-    <div class="col-4">
-      <h3>Invoice {{ object.code }}</h3>
+<div class="container-fluid rounded border border-dark mt-2 p-2">
+  <div class="row p-1">
+    <div class="col-8">
+      <div class="row">
+        <h3>Invoice {{ object.code }}</h3>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          {{ object.date.label }}
+          {{ object.date }}
+        </div>
+        <div class="col-4">
+          {{ object.status.label }}
+          {{ object.get_status_display }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          {{ object.partner.label }}
+          {{ object.partner }}
+        </div>
+        <div class="col-4">
+          {{ object.type.label }}
+          {{ object.get_type_display }}
+        </div>
+      </div>
     </div>
     <div class="col-4">
-    </div>
-    <div class="col-4">
-      <div class="text-end">
-        <a>
-          ste #
-        </a>
-        <a>
-          pay #
-        </a>
+      <div class="row p-1">
+        <div class="col-9">
+        </div>
+        {% if object.status == 'draft' %}
+          <div class="col-3 container rounded border text-center bg-secondary">
+        {% elif object.status == 'submitted' %}
+          <div class="col-3 container rounded border text-center bg-primary">
+        {% elif object.status == 'cancelled' %}
+          <div class="col-3 container rounded border text-center bg-danger">
+        {% endif %}
+            {{ object.get_status_display }}
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col-9">
+        </div>
+        <div class="col-3 container rounded border border-dark">
+          <span class="material-icons">
+            local_shipping more_vert add done
+          </span>
+        </div>
+      </div>
+      <div class="row p-1">
+        <div class="col-9">
+        </div>
+        <div class="col-3 container rounded border border-dark">
+          <span class="material-icons">
+            payments more_vert add done
+          </span>
+        </div>
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-4">
-      {{ object.date.label }}
-      {{ object.date }}
-    </div>
-    <div class="col-4">
-      {{ object.status.label }}
-      {{ object.get_status_display }}
-    </div>
-    <div class="col-4">
+  <!-- <div class="container rounded border p-1"> -->
+  <div class="row p-2">
+    <div class="col-12 container rounded border border-dark">
+      <table class="table border-dark mb-0">
+        <thead>
+          <th style="width:50%">Code</th>
+          <th style="width:20%">QTY</th>
+          <th style="width:20%">Price</th>
+          <th style="width:5%"></th>
+        </thead>
+        <tbody>
+          {% for line in lines %}
+          <tr>
+            <td class="hidden">{{ line.id }}</td>
+            <td style="width:50%">{{ line.item }}</td>
+            <td style="width:20%">{{ line.qty }}</td>
+            <td style="width:20%">{{ line.price }}</td>
+            <td style="width:10%">
+              <div class="pull-right">
+                <a onclick="edit_line({{line.id}})" type="button" class="material-icons">
+                  edit 
+                </a>
+                <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
+                  delete
+                </a>
+            </td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td></td>
+            <td>Total:</td>
+            <td>{{ object.total }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  <div class="row">
-    <div class="col-4">
-      {{ object.partner.label }}
-      {{ object.partner }}
-    </div>
-    <div class="col-4">
-      {{ object.type.label }}
-      {{ object.get_type_display }}
-    </div>
-    <div class="col-4">
+  <div class="row p-2"a>
+      <div class=" col-8">
       </div>
-  </div>
-  <div class="container form-control mx-auto mt-2">
-    <table class="table">
-      <thead>
-        <th style="width:50%">Code</th>
-        <th style="width:20%">QTY</th>
-        <th style="width:20%">Price</th>
-        <th style="width:5%"></th>
-      </thead>
-      <tbody>
-        {% for line in lines %}
-        <tr>
-          <td class="hidden">{{ line.id }}</td>
-          <td style="width:50%">{{ line.item }}</td>
-          <td style="width:20%">{{ line.qty }}</td>
-          <td style="width:20%">{{ line.price }}</td>
-          <td style="width:10%">
-            <div class="pull-right">
-              <a onclick="edit_line({{line.id}})" type="button" class="material-icons">
-                edit 
-              </a>
-              <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
-                delete
-              </a>
-          </td>
-        </tr>
-        {% endfor %}
-        <tr>
-          <td></td>
-          <td>Total:</td>
-          <td>{{ object.total }}</td>
-        </tr>
-      </tbody>
-    </table>
+      <div class="col-4 container rounded border border-dark">
+        <table class="table mb-0 border-dark">
+          <tr>
+            <td>Total:</td>
+            <td>{{ object.total }}</td>
+          </tr>
+          <tr>
+            <td>Payments:</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>Outstanding:</td>
+            <td>0.0</td>
+          </tr>
+        </table>
+      </div>
   </div>
 
-  <div class="row">
+  <div class="row p-0 mb-1">
     {% if object.status == 'draft' %}
     <div class="col-6">
-      <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary mt-2">
+      <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary">
         <!-- data-bs-toggle="modal" data-bs-target="#itemModal"> -->
         Add Item
       </button>
     </div>
     <div class="col-6">
-        <button id="submit-modal-btn" type="button" class="btn btn-success mt-2 pull-right" data-bs-toggle="modal"
+        <button id="submit-modal-btn" type="button" class="btn btn-success pull-right" data-bs-toggle="modal"
           data-bs-target="#submitInvoiceModal">
           Submit
         </button>
@@ -98,7 +140,7 @@
     {% endif %}
     {% if object.status == 'submitted' %}
     <div class="col-12">
-        <button id="cancel-modal-btn" type="button" class="btn btn-danger mt-2 pull-right" data-bs-toggle="modal"
+        <button id="cancel-modal-btn" type="button" class="btn btn-danger pull-right" data-bs-toggle="modal"
           data-bs-target="#cancelInvoiceModal">
           Cancel
         </button>
@@ -110,14 +152,8 @@
   <!-- Item Modal -->
   <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Product</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="item-modal-body">
-          <!-- FORM -->
-        </div>
+      <div class="modal-content" id="item-modal-content">
+        <!-- ITEM -->
       </div>
     </div>
   </div>

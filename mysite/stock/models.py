@@ -26,8 +26,15 @@ class StockEntry(models.Model):
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     parent = models.ForeignKey(Invoice, related_name='ste_parent', on_delete=models.CASCADE, null=True)
 
+    class Meta:
+        ordering = ['-code']
+
     def __str__(self):
         return self.code
+
+    def get_absolute_url(self):
+        # return 'prduct:list', (), {'slug': self.slug}
+        return reverse('product:detail', args=[self.id])
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.id:
@@ -67,14 +74,6 @@ class StockEntry(models.Model):
             ste.total = total
             ste.save()
             
-
-    def get_absolute_url(self):
-        # return 'prduct:list', (), {'slug': self.slug}
-        return reverse('product:detail', args=[self.id])
-
-    class Meta:
-        ordering = ['-code']
-
 
 class StockEntryLine(models.Model):
     item = models.ForeignKey(Product, related_name='str_line_item', on_delete=models.CASCADE)

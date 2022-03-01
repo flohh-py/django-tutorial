@@ -48,20 +48,20 @@ $(document).ready(function() {
 });
 function edit_line(id) {
   $.get("/invoice/edit_line/" + id, function(data) {
-    $("#item-modal-body").html(data)
+    $("#item-modal-content").html(data)
   })
   $("#itemModal").modal("toggle");
 }
 function add_line(id) {
   $.get("/invoice/add_line/", function(data) {
-    $("#item-modal-body").html(data)
+    $("#item-modal-content").html(data)
     $("#id_parent").val(id) //gambiarra?
   })
   $("#itemModal").modal("toggle");
 }
 function delete_line(id) {
   $.get("/invoice/delete_line/" + id, function(data) {
-    $("#item-modal-body").html(data)
+    $("#item-modal-content").html(data)
   })
   $("#itemModal").modal("toggle");
 }
