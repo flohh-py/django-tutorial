@@ -112,25 +112,20 @@ class CreateStockEntry(CreateView):
     def get_context_data(self, **kwargs):
         # add val for template 
         context = super(CreateStockEntry, self).get_context_data(**kwargs)
-        context['invo_id'] = self.kwargs['invo_id']
-        return context
+        invo_obj = Invoice.objects.get(pk=self.kwargs['invo_id'])
+        context['invo_obj'] = invo_obj
 
-    def post(self, request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+        context['form'] = StockEntryForm({
+            'type': 'delivery' if invo_obj.type == 'sell' else 'receipt',
+            'date': invo_obj.date
+        })
+        return context
 
     def form_valid(self, form):
         context = self.get_context_data()
-        invo_obj = Invoice.objects.get(pk=context['invo_id'])
-
-        if invo_obj.type == 'sell':
-            form.instance.type = 'delivery'
-        if invo_obj.type == 'purchase':
-            form.instance.type = 'receipt'
-
         self.object = form.save()
-        self.object.parent = invo_obj
-
-        invoice_lines = InvoiceLine.objects.all().filter(parent=context['invo_id'])
+        self.object.parent = context['invo_obj']
+        invoice_lines = InvoiceLine.objects.all().filter(parent=context['invo_obj'].id)
         for il in invoice_lines:
             line = StockEntryLineForm({
                 'parent': self.object,
@@ -140,7 +135,6 @@ class CreateStockEntry(CreateView):
                 })
             if line.is_valid():
                 line.save()
-        self.object.save()
 
         return super(CreateStockEntry, self).form_valid(form)
 

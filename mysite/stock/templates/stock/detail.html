@@ -3,91 +3,146 @@
 {% block content %}
 <script src="{% static 'js/stock.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/stock.css' %}" rel="stylesheet" />
-<div class="container form-control mx-auto mt-2">
-  <h3>Stock Entry {{ object.code }}</h3>
-  <div class='row'>
-    <div class=' col-6'>
-      {{ object.date.label }}
-      {{ object.date }}
+<div class="container-fluid rounded border border-dark mt-2 p-2">
+  <div class='row p-1'>
+    <div class=' col-8'>
+      <div class="row">
+        <h3> Stock Entry {{ object.code }}
+      </div>
+      <div class="row">
+        <div class="col-4">
+          {{ object.date.label }}
+          {{ object.date }}
+        </div>
+        <div class="col-4">
+          {{ object.status.label }}
+          {{ object.status }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-4">
+          {{ object.parent.label }}
+          {{ object.parent }}
+        </div>
+        <div class="col-4">
+          {{ object.type.label }}
+          {{ object.get_type_display }}
+        </div>
+      </div>
     </div>
-    <div class='col-6'>
-      {{ object.status.label }}
-      {{ object.get_status_display }}
+    <div class="col-4">
+      <div class="row p-1">
+        <div class="col-9">
+        </div>
+        {% if object.status == 'draft' %}
+          <div class="col-3 container rounded border text-center bg-secondary">
+        {% elif object.status == 'submitted' %}
+          <div class="col-3 container rounded border text-center bg-primary">
+        {% elif object.status == 'cancelled' %}
+          <div class="col-3 container rounded border text-center bg-danger">
+        {% endif %}
+          <b>{{ object.get_status_display }}</b>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class='row'>
-    <div class='col-6'>
-      {{ object.parent.label }}
-      {{ object.parent }}
-    </div>
-    <div class='col-6'>
-      {{ object.type.label }}
-      {{ object.get_type_display }}
-    </div>
-  </div>
-  <div class="container form-control mx-auto mt-2">
-    <table class="table" style="with:100%;">
-      <thead>
-        <th>Code</th>
-        <th>QTY</th>
-        <th>Price</th>
-        <th>Total</th>
-        <th></th>
-      </thead>
-      <tbody>
-        {% for line in lines %}
-        <tr>
-          <td class="hidden">{{ line.id }}</td>
-          <td style="width:45%;">{{ line.item }}</td>
-          <td style="width:15%;">{{ line.qty }}</td>
-          <td style="width:15%;">{{ line.price }}</td>
-          <td style="width:15%;">{{ line.total }}</td>
-          <td style="width:10%;">
-            <div>
-              <button onclick="edit_line({{line.id}}) "type="button" class="btn btn-primary pull-right" >
-                <!-- data-bs-toggle="modal" data-bs-target="#itemEditModal"> -->
-                E
-              </button>
-              <button onclick="delete_line({{line.id}})" type="button" class="btn btn-danger pull-right">
-                <!-- data-bs-toggle="modal" data-bs-target="#itemDeleteModal"> -->
-                D
-              </button>
-            </div>
-          </td>
-        </tr>
-        {% endfor %}
-        <tr>
-          <td></td>
-          <td>Total:</td>
-          <td>{{ object.total }}</td>
-        </tr>
-      </tbody>
-    </table>
   </div>
 
-  <div class="row">
+  <div class"row p-2">
+    <div class="col-12 container-fluid rounded border border-dark">
+      <table class="table border-dark mb-0">
+        <thead>
+          {% if object.status == 'draft' %}
+            <th style="width:45%;">Code</th>
+            <th class="text-end" style="width:15%;">QTY</th>
+            <th class="text-end" style="width:15%;">Price</th>
+            <th class="text-end" style="width:15%;">Total</th>
+            <th class="text-end" style="width:10%;"></th>
+          {% else %}
+            <th style="width:55%;">Code</th>
+            <th class="text-end" style="width:15%;">QTY</th>
+            <th class="text-end" style="width:15%;">Price</th>
+            <th class="text-end" style="width:15%;">Total</th>
+          {% endif %}
+        </thead>
+        <tbody>
+          {% for line in lines %}
+          <tr>
+            {% if object.status == 'draft' %}
+              <td class="hidden">{{ line.id }}</td>
+              <td style="width:45%;">{{ line.item }}</td>
+              <td class="text-end" style="width:15%;">{{ line.qty }}</td>
+              <td class="text-end" style="width:15%;">{{ line.price }}</td>
+              <td class="text-end" style="width:15%;">{{ line.total }}</td>
+              <td class="text-end" style="width:10%;">
+                <div>
+                  <a onclick="edit_line({{line.id}}) "type="button" class="material-icons" >
+                    edit
+                  </a>
+                  <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
+                    delete
+                  </a>
+                </div>
+              </td>
+              {% else %}
+              <td class="hidden">{{ line.id }}</td>
+              <td style="width:55%;">{{ line.item }}</td>
+              <td class="text-end" style="width:15%;">{{ line.qty }}</td>
+              <td class="text-end" style="width:15%;">{{ line.price }}</td>
+              <td class="text-end" style="width:15%;">{{ line.total }}</td>
+              {% endif %}
+          </tr>
+          {% endfor %}
+          <tr class="text-end">
+            <td></td>
+            <td></td>
+            <td>Total:</td>
+            <td>{{ object.total }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row p-2">
+      <div class=" col-8">
+      </div>
+      <div class="col-4 container rounded border border-dark">
+        <table class="table mb-0 border-dark">
+          <tr>
+            <td>Total:</td>
+            <td>{{ object.total }}</td>
+          </tr>
+          <tr>
+            <td>Payments:</td>
+            <td>0.0</td>
+          </tr>
+          <tr>
+            <td>Outstanding:</td>
+            <td>0.0</td>
+          </tr>
+        </table>
+      </div>
+  </div>
+
+  <div class="row p-0 mb-1">
     {% if object.status == 'draft' %}
     <div class="col-6">
-      <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary mt-2">
-        <!-- data-bs-toggle="modal" data-bs-target="#itemModal"> -->
+      <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary">
         Add Item
       </button>
     </div>
     <div class="col-6">
-        <button id="submit-modal-btn" type="button" class="btn btn-success mt-2 pull-right" data-bs-toggle="modal"
-          data-bs-target="#submitSteModal">
-          Submit
-        </button>
-      </form>
+      <button id="submit-modal-btn" type="button" class="btn btn-success mt-2 pull-right" data-bs-toggle="modal"
+        data-bs-target="#submitSteModal">
+        Submit
+      </button>
     </div>
     {% endif %}
     {% if object.status == 'submitted' %}
     <div class="col-12">
-        <button id="cancel-modal-btn" type="button" class="btn btn-danger mt-2 pull-right" data-bs-toggle="modal"
-          data-bs-target="#cancelSteModal">
-          Cancel
-        </button>
-      </form>
+      <button id="cancel-modal-btn" type="button" class="btn btn-danger mt-2 pull-right" data-bs-toggle="modal"
+        data-bs-target="#cancelSteModal">
+        Cancel
+      </button>
     </div>
     {% endif %}
   <div>

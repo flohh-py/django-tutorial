@@ -48,20 +48,25 @@
         <div class="row p-1">
           <div class="col-9">
           </div>
-          <div class="col-3 container rounded border border-dark">
-            <span onclick="create_ste({{object.id}})" class="material-icons">
-              local_shipping more_vert add done
-            </span>
+          <div onclick="create_ste({{object.id}})" class="col-3 container rounded border border-dark text-center">
+            <b class="fs-5">
+              <span class="material-icons align-middle">
+                local_shipping more_vert
+              </span> 
               {{ object.get_ste_count}}
+            </b>
           </div>
         </div>
         <div class="row p-1">
           <div class="col-9">
           </div>
-          <div class="col-3 container rounded border border-dark">
-            <span class="material-icons">
-              payments more_vert add done
-            </span>
+          <div class="col-3 container rounded border border-dark text-center">
+            <b class="fs-5">
+              <span class="material-icons align-middle">
+                payments more_vert
+              </span>
+              0
+            </b>
           </div>
         </div>
       {% endif %}
@@ -69,33 +74,51 @@
   </div>
   <!-- <div class="container rounded border p-1"> -->
   <div class="row p-2">
-    <div class="col-12 container rounded border border-dark">
+    <div class="col-12 container-fluid rounded border border-dark">
       <table class="table border-dark mb-0">
         <thead>
-          <th style="width:50%">Code</th>
-          <th style="width:20%">QTY</th>
-          <th style="width:20%">Price</th>
-          <th style="width:5%"></th>
+          {% if object.status == 'draft' %}
+            <th style="width:45%">Code</th>
+            <th class="text-end" style="width:15%">QTY</th>
+            <th class="text-end" style="width:15%">Price</th>
+            <th class="text-end" style="width:15%">Total</th>
+            <th class="text-end" style="width:10%"></th>
+          {% else %}
+            <th style="width:55%">Code</th>
+            <th class="text-end" style="width:15%">QTY</th>
+            <th class="text-end" style="width:15%">Price</th>
+            <th class="text-end" style="width:15%">Total</th>
+          {% endif %}
         </thead>
         <tbody>
           {% for line in lines %}
-          <tr>
-            <td class="hidden">{{ line.id }}</td>
-            <td style="width:50%">{{ line.item }}</td>
-            <td style="width:20%">{{ line.qty }}</td>
-            <td style="width:20%">{{ line.price }}</td>
-            <td style="width:10%">
-              <div class="pull-right">
-                <a onclick="edit_line({{line.id}})" type="button" class="material-icons">
-                  edit 
-                </a>
-                <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
-                  delete
-                </a>
-            </td>
-          </tr>
+            <tr>
+              {% if object.status == 'draft' %}
+                <td class="hidden">{{ line.id }}</td>
+                <td style="width:45%">{{ line.item }}</td>
+                <td class="text-end" style="width:15%">{{ line.qty }}</td>
+                <td class="text-end" style="width:15%">{{ line.price }}</td>
+                <td class="text-end" style="width:15%">{{ line.total }}</td>
+                <td class="text-end" style="width:10%">
+                  <div>
+                    <a onclick="edit_line({{line.id}})" type="button" class="material-icons">
+                      edit 
+                    </a>
+                    <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
+                      delete
+                    </a>
+                </td>
+            {% else %}
+                <td class="hidden">{{ line.id }}</td>
+                <td style="width:55%">{{ line.item }}</td>
+                <td class="text-end" style="width:15%">{{ line.qty }}</td>
+                <td class="text-end" style="width:15%">{{ line.price }}</td>
+                <td class="text-end" style="width:15%">{{ line.total }}</td>
+            {% endif %}
+            </tr>
           {% endfor %}
-          <tr>
+          <tr class="text-end">
+            <td></td>
             <td></td>
             <td>Total:</td>
             <td>{{ object.total }}</td>
@@ -104,7 +127,7 @@
       </table>
     </div>
   </div>
-  <div class="row p-2"a>
+  <div class="row p-2">
       <div class=" col-8">
       </div>
       <div class="col-4 container rounded border border-dark">
@@ -129,7 +152,6 @@
     {% if object.status == 'draft' %}
     <div class="col-6">
       <button onclick="add_line({{object.id}})" id="add-item-btn" type="button" class="btn btn-primary">
-        <!-- data-bs-toggle="modal" data-bs-target="#itemModal"> -->
         Add Item
       </button>
     </div>
@@ -138,7 +160,6 @@
           data-bs-target="#submitInvoiceModal">
           Submit
         </button>
-      </form>
     </div>
     {% endif %}
     {% if object.status == 'submitted' %}
@@ -147,7 +168,6 @@
           data-bs-target="#cancelInvoiceModal">
           Cancel
         </button>
-      </form>
     </div>
     {% endif %}
   <div>

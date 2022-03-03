@@ -2,14 +2,14 @@
 {% block content %}
 <script src="{% static 'js/stock.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/stock.css' %}" rel="stylesheet" />
-<form action="{% url 'invoice:create_sotckentry' invo_id=invo_id%}" method="POST">
+<form action="{% url 'invoice:create_sotckentry' invo_id=invo_obj.id%}" method="POST">
   <div class="modal-header">
     <h5 class="modal-title">Select date for delivery</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
   </div>
   <div class="modal-body">
     {% csrf_token %}
-    {{form.date}}
+    {{form.as_table}}
   </div>
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary ">Create</button>

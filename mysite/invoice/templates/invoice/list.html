@@ -1,9 +1,10 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
-<br>
-<div class="container rounded border mt-2">
-  <table class="table mb-0">
+<script src="{% static 'js/invoice.js' %}" type="text/javascript"></script>
+<link href="{% static 'css/invoice.css' %}" rel="stylesheet"/>
+<div class="container rounded border border-dark mt-2">
+  <table class="table table-hover mb-0">
     <thead>
       <th style="width:15%">Code</th>
       <th style="width:15%">Date</th>
@@ -11,37 +12,30 @@
       <th style="width:10%" class="text-center">Type</th>
       <th style="width:10%" class="text-center">Status</th>
       <th style="width:10%">Total</th>
-      <th style="width:10%"></th>
     </thead>
     <tbody>
       {% for invoice in object_list %}
-      <tr>
+      <tr onclick="invoice_detail({{invoice.id}})">
         <td style="width:15%">{{ invoice.code }}</td>
         <td style="width:15%">{{ invoice.date }}</td>
         <td style="width:30%">{{ invoice.partner }}</td>
         <td style="width:10%" class="text-center">{{ invoice.get_type_display }}</td>
         <td style="width:10%">
           {% if invoice.status == 'draft' %}
-            <div class="bg-secondary text-white text-center form-control">
+            <div class="bg-secondary text-white text-center border border-dark rounded">
           {% elif invoice.status == 'submitted' %}
-            <div class="bg-primary text-white text-center form-control">
+            <div class="bg-primary text-white text-center border border-dark rounded">
           {% elif invoice.status == 'cancelled' %}
-            <div class="bg-danger text-white text-center form-control">
+            <div class="bg-danger text-white text-center border border-dark rounded">
           {% endif %}
             {{ invoice.get_status_display }}
           </div>
         </td>
         <td style="width:10%">{{ invoice.total }}</td>
-        <td style="width:10%">
-          <div class="text-end">
-            <a href="{% url 'invoice:detail' pk=invoice.id %}" Type="button" class="material-icons">
-              file_open
-            </a>
-          </div>
-        </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
+  {% include 'main/footer.html' %}
 </div>
 {% endblock content %}

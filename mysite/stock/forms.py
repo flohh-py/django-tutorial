@@ -7,13 +7,13 @@ class StockEntryForm(forms.ModelForm):
     class Meta:
         model = StockEntry
         fields = [
-                'date',
-                'type',
-                ]
+            'date',
+            'type',
+        ]
         widgets = {
-                'date': forms.DateInput(attrs={'class': 'form-control container col', 'type': 'date'}),
-                'type': forms.Select(attrs={'class': 'form-control'}),
-                }
+            'date': forms.DateInput(attrs={'class': 'form-control container col', 'type': 'date'}),
+            'type': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 
 class StockEntryLineForm(forms.ModelForm):
