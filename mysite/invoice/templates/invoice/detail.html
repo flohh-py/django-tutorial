@@ -41,27 +41,30 @@
         {% elif object.status == 'cancelled' %}
           <div class="col-3 container rounded border text-center bg-danger">
         {% endif %}
-            {{ object.get_status_display }}
+          <b>{{ object.get_status_display }}</b>
         </div>
       </div>
-      <div class="row p-1">
-        <div class="col-9">
+      {% if object.status == 'submitted' %}
+        <div class="row p-1">
+          <div class="col-9">
+          </div>
+          <div class="col-3 container rounded border border-dark">
+            <span onclick="create_ste({{object.id}})" class="material-icons">
+              local_shipping more_vert add done
+            </span>
+              {{ object.get_ste_count}}
+          </div>
         </div>
-        <div class="col-3 container rounded border border-dark">
-          <span class="material-icons">
-            local_shipping more_vert add done
-          </span>
+        <div class="row p-1">
+          <div class="col-9">
+          </div>
+          <div class="col-3 container rounded border border-dark">
+            <span class="material-icons">
+              payments more_vert add done
+            </span>
+          </div>
         </div>
-      </div>
-      <div class="row p-1">
-        <div class="col-9">
-        </div>
-        <div class="col-3 container rounded border border-dark">
-          <span class="material-icons">
-            payments more_vert add done
-          </span>
-        </div>
-      </div>
+      {% endif %}
     </div>
   </div>
   <!-- <div class="container rounded border p-1"> -->

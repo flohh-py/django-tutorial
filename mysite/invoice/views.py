@@ -4,6 +4,8 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from .models import Invoice, InvoiceLine
 from .forms import InvoiceForm, InvoiceLineIF, InvoiceLineForm
+from stock.models import StockEntry, StockEntryLine
+from stock.forms import StockEntryForm, StockEntryLineForm, StockEntryLineIF
 
 
 class InvoiceList(ListView):
@@ -96,3 +98,51 @@ class InvoiceLineDelete(DeleteView):
 
     def get_success_url(self):
         return reverse('invoice:detail', kwargs={'pk':self.object.parent.id})
+
+
+class CreateStockEntry(CreateView):
+    model = StockEntry
+    form_class = StockEntryForm
+    template_name = 'invoice/create_ste.html'
+    pk_url_kwarg = 'pk'
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        # add val for template 
+        context = super(CreateStockEntry, self).get_context_data(**kwargs)
+        context['invo_id'] = self.kwargs['invo_id']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        invo_obj = Invoice.objects.get(pk=context['invo_id'])
+
+        if invo_obj.type == 'sell':
+            form.instance.type = 'delivery'
+        if invo_obj.type == 'purchase':
+            form.instance.type = 'receipt'
+
+        self.object = form.save()
+        self.object.parent = invo_obj
+
+        invoice_lines = InvoiceLine.objects.all().filter(parent=context['invo_id'])
+        for il in invoice_lines:
+            line = StockEntryLineForm({
+                'parent': self.object,
+                'item': il.item,
+                'qty': il.qty,
+                'price': il.price
+                })
+            if line.is_valid():
+                line.save()
+        self.object.save()
+
+        return super(CreateStockEntry, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('stock:detail', kwargs={'pk':self.object.id})

@@ -13,4 +13,6 @@ urlpatterns = [
     path('add_line/', InvoiceLineCreate.as_view(), name='add_line'),
     path('delete_line/<int:pk>', InvoiceLineDelete.as_view(), name='delete_line'),
     path('edit_line/<int:pk>', InvoiceLineEdit.as_view(), name='edit_line'),
+
+    path('crete_stockentry/<int:invo_id>', CreateStockEntry.as_view(), name='create_sotckentry'),
 ]

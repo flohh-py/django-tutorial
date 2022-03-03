@@ -17,6 +17,8 @@
   </div>
   <div class='row'>
     <div class='col-6'>
+      {{ object.parent.label }}
+      {{ object.parent }}
     </div>
     <div class='col-6'>
       {{ object.type.label }}
@@ -29,15 +31,17 @@
         <th>Code</th>
         <th>QTY</th>
         <th>Price</th>
+        <th>Total</th>
         <th></th>
       </thead>
       <tbody>
         {% for line in lines %}
         <tr>
           <td class="hidden">{{ line.id }}</td>
-          <td style="width:50%;">{{ line.item }}</td>
-          <td style="width:20%;">{{ line.qty }}</td>
-          <td style="width:20%;">{{ line.price }}</td>
+          <td style="width:45%;">{{ line.item }}</td>
+          <td style="width:15%;">{{ line.qty }}</td>
+          <td style="width:15%;">{{ line.price }}</td>
+          <td style="width:15%;">{{ line.total }}</td>
           <td style="width:10%;">
             <div>
               <button onclick="edit_line({{line.id}}) "type="button" class="btn btn-primary pull-right" >

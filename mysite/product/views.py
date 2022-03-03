@@ -56,7 +56,7 @@ class ProductDetail(DetailView):
             prod_data = Product.objects.filter(id=kwargs.get('pk')).values()[0]
             return JsonResponse(prod_data, safe=False)
 
-        return super(ProductList, self).get(*args,**kwargs)
+        return super(ProductDetail, self).get(*args,**kwargs)
 
 
 class ProductDelete(DeleteView):
@@ -69,7 +69,6 @@ class ProductDelete(DeleteView):
 #     template = 'product/product_create.html'
 #     def get(self, request, pk=None):
 #         if pk:
-#             print(pk)
 #             products = Product.objects.get(id=pk)
 #             prod_form = ProductForm(instance=products)
 #         else:

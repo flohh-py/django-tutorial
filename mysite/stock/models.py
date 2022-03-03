@@ -32,10 +32,6 @@ class StockEntry(models.Model):
     def __str__(self):
         return self.code
 
-    def get_absolute_url(self):
-        # return 'prduct:list', (), {'slug': self.slug}
-        return reverse('product:detail', args=[self.id])
-
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if not self.id:
             if self.type == 'transfer':
@@ -46,6 +42,16 @@ class StockEntry(models.Model):
                 self.code = NS.get_series(serie='DSTE')
             if self.type == 'receipt':
                 self.code = NS.get_series(serie='RSTE')
+        
+        # FIXME dont calculate total fom post_save
+        # when ste create from invoice only from save method
+
+        else:
+            total = 0
+            lines = StockEntryLine.objects.filter(parent=self.id)
+            for line in lines:
+                total += line.total
+            self.total = total
         return super().save(force_insert, force_update, using, update_fields)
 
     @classmethod
@@ -77,7 +83,7 @@ class StockEntry(models.Model):
 
 class StockEntryLine(models.Model):
     item = models.ForeignKey(Product, related_name='str_line_item', on_delete=models.CASCADE)
-    parent = models.ForeignKey(StockEntry, related_name='ste_line_parent', on_delete=models.CASCADE)
+    parent = models.ForeignKey(StockEntry, related_name='ste_line_parent', on_delete=models.CASCADE, null=True)
     qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
@@ -112,6 +118,7 @@ class StockEntryLine(models.Model):
 
 @receiver(post_save, sender=StockEntryLine)
 def save_calculate_ste_lines(sender, instance, **kwargs):
+    # FIXME dont calculate when create from invoice
     instance.parent.calculate_total(instance.parent.id)
 
 @receiver(post_delete, sender=StockEntryLine)

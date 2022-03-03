@@ -2,10 +2,10 @@ from django.db import models
 from django.urls import reverse
 from product.models import Product
 from partner.models import Partner
+# import stock # to avoid circular import
 from django.dispatch import receiver
 from django.db.models.signals import post_save, post_delete
 from main.models import NamingSeries as NS
-
 
 INVO_TYPE = [
     ('sell', 'Sell'),
@@ -21,6 +21,12 @@ STOCK_STATUS = [
     ('partial', 'Partial'),
     ('complete', 'Complete'),
 ]
+PAY_STATUS = [
+    ('pending', 'Pending'),
+    ('partial', 'Partial'),
+    ('complete', 'Complete'),
+    ('overdue', 'Overdue'),
+]
 
 class Invoice(models.Model):
     code = models.CharField(max_length=10, null=True)
@@ -30,8 +36,11 @@ class Invoice(models.Model):
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     qty_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
-    # pay_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
+    pay_status = models.CharField(choices=PAY_STATUS, default='pending', null=True, max_length=10)
     outstanding = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
+
+    class Meta:
+        ordering = ['code']
 
     def __str__(self):
         return self.code
@@ -43,6 +52,9 @@ class Invoice(models.Model):
             if self.type == 'sell':
                 self.code = NS.get_series(serie='SINV')
         return super().save(force_insert, force_update, using, update_fields)
+
+    def get_absolute_url(self):
+        return reverse('invoice:detail', args=[self.id])
 
     @classmethod
     def submit_invoice(cls, id=None):
@@ -60,9 +72,6 @@ class Invoice(models.Model):
                 invo.status = 'cancelled'
                 invo.save()
 
-    def get_absolute_url(self):
-        return reverse('invoice:detail', args=[self.id])
-
     @classmethod
     def calculate_total(cls, id=None):
         total = 0
@@ -75,8 +84,15 @@ class Invoice(models.Model):
             invo.total = total
             invo.save()
             
-    class Meta:
-        ordering = ['code']
+    def get_ste_count(self):
+        from stock.models import StockEntry
+        ste = StockEntry.objects.filter(parent=self.id).count()
+        return ste
+
+    # def get_pay_count(self):
+    #     from stock.models import StockEntry
+    #     ste = StockEntry.objects.filter(parent=self.id).count()
+    #     return ste
 
 
 class InvoiceLine(models.Model):
@@ -86,6 +102,7 @@ class InvoiceLine(models.Model):
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
+    qty_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -113,7 +130,6 @@ class InvoiceLine(models.Model):
             return True
         else:
             return False
-
 
 @receiver(post_save, sender=InvoiceLine)
 def save_calculate_inv_lines(sender, instance, **kwargs):

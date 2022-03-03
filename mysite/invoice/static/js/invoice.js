@@ -65,3 +65,10 @@ function delete_line(id) {
   })
   $("#itemModal").modal("toggle");
 }
+function create_ste(invo_id) {
+  $.get("/invoice/crete_stockentry/" + invo_id, function(data) {
+    $("#item-modal-content").html(data)
+  })
+  console.log("TEST")
+  $("#itemModal").modal("toggle");
+}
