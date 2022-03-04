@@ -3,14 +3,16 @@
 <script src="{% static 'js/stock.js' %}" type="text/javascript"></script>
 <link href="{% static 'css/stock.css' %}" rel="stylesheet" />
 <form action="{% url 'stock:delete_line' pk=object.id %}" method='POST'>
-  {% csrf_token %}
-  <div class="row">
+  <div class="modal-header">
+    <h5 class="modal-title">Delete Item</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  </div>
+  <div class="modal-body">
+    {% csrf_token %}
     <a>Confirm remove: <b>{{object.item}}</b></a>
   </div>
-  <div class="row">
-    <div class="col">
-      <button type="submit" class="btn btn-primary pull-right">Confirm</button>
-    </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Confirm</button>
   </div>
 </form>
 {% endblock delete_line %}

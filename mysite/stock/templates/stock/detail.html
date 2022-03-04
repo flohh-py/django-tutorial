@@ -49,14 +49,14 @@
 
   <div class"row p-2">
     <div class="col-12 container-fluid rounded border border-dark">
-      <table class="table border-dark mb-0">
+      <table class="table table-hover border-dark mb-0">
         <thead>
           {% if object.status == 'draft' %}
-            <th style="width:45%;">Code</th>
+            <th style="width:50%;">Code</th>
             <th class="text-end" style="width:15%;">QTY</th>
             <th class="text-end" style="width:15%;">Price</th>
             <th class="text-end" style="width:15%;">Total</th>
-            <th class="text-end" style="width:10%;"></th>
+            <th class="text-end" style="width:5%;"></th>
           {% else %}
             <th style="width:55%;">Code</th>
             <th class="text-end" style="width:15%;">QTY</th>
@@ -66,21 +66,22 @@
         </thead>
         <tbody>
           {% for line in lines %}
-          <tr>
+            {% if object.status == 'draft' %}
+              <tr onclick="edit_line({{line.id}})">
+            {% else %}
+              <tr>
+            {% endif %}
             {% if object.status == 'draft' %}
               <td class="hidden">{{ line.id }}</td>
-              <td style="width:45%;">{{ line.item }}</td>
+              <td style="width:50%;">{{ line.item }}</td>
               <td class="text-end" style="width:15%;">{{ line.qty }}</td>
               <td class="text-end" style="width:15%;">{{ line.price }}</td>
               <td class="text-end" style="width:15%;">{{ line.total }}</td>
-              <td class="text-end" style="width:10%;">
+              <td class="text-end" style="width:5%;">
                 <div>
-                  <a onclick="edit_line({{line.id}}) "type="button" class="material-icons" >
-                    edit
-                  </a>
-                  <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
+                  <span onclick="delete_line({{line.id}})" type="button" class="material-icons">
                     delete
-                  </a>
+                  </span>
                 </div>
               </td>
               {% else %}
@@ -103,24 +104,24 @@
     </div>
   </div>
   <div class="row p-2">
-      <div class=" col-8">
-      </div>
-      <div class="col-4 container rounded border border-dark">
-        <table class="table mb-0 border-dark">
-          <tr>
-            <td>Total:</td>
-            <td>{{ object.total }}</td>
-          </tr>
-          <tr>
-            <td>Payments:</td>
-            <td>0.0</td>
-          </tr>
-          <tr>
-            <td>Outstanding:</td>
-            <td>0.0</td>
-          </tr>
-        </table>
-      </div>
+    <div class=" col-8">
+    </div>
+    <div class="col-4 container rounded border border-dark">
+      <table class="table mb-0 border-dark">
+        <tr>
+          <td>Total:</td>
+          <td>{{ object.total }}</td>
+        </tr>
+        <tr>
+          <td>Payments:</td>
+          <td>0.0</td>
+        </tr>
+        <tr>
+          <td>Outstanding:</td>
+          <td>0.0</td>
+        </tr>
+      </table>
+    </div>
   </div>
 
   <div class="row p-0 mb-1">
@@ -151,12 +152,8 @@
   <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add Item</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="item-modal-body">
-          <!-- FORM -->
+        <div class="modal-header" id="item-modal-content">
+          <!-- ITEM -->
         </div>
       </div>
     </div>
@@ -215,5 +212,6 @@
       </div>
     </div>
   </div>
+
 </div>
 {% endblock content %}

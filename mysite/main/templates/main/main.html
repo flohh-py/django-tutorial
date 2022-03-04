@@ -24,8 +24,16 @@
   </head>
   <body>
     {% include 'main/navbar.html' %}
-    {% block content %}
+    <div class="row">
+      <div class="col-2">
+      </div>
+      <div class="col-9">
+        {% block content %}
 
-    {% endblock content %}
+        {% endblock content %}
+      </div>
+      <div class="col-1">
+      </div>
+    </div>
   </body>
 </html>

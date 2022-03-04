@@ -32,23 +32,23 @@
     </div>
     <div class="col-4">
       <div class="row p-1">
-        <div class="col-9">
+        <div class="col-8">
         </div>
         {% if object.status == 'draft' %}
-          <div class="col-3 container rounded border text-center bg-secondary">
+          <div class="col-4 container rounded border text-center bg-secondary">
         {% elif object.status == 'submitted' %}
-          <div class="col-3 container rounded border text-center bg-primary">
+          <div class="col-4 container rounded border text-center bg-primary">
         {% elif object.status == 'cancelled' %}
-          <div class="col-3 container rounded border text-center bg-danger">
+          <div class="col-4 container rounded border text-center bg-danger">
         {% endif %}
           <b>{{ object.get_status_display }}</b>
         </div>
       </div>
       {% if object.status == 'submitted' %}
         <div class="row p-1">
-          <div class="col-9">
+          <div class="col-8">
           </div>
-          <div onclick="create_ste({{object.id}})" class="col-3 container rounded border border-dark text-center">
+          <div onclick="create_ste({{object.id}})" class="col-4 container rounded border border-dark text-center">
             <b class="fs-5">
               <span class="material-icons align-middle">
                 local_shipping more_vert
@@ -58,9 +58,9 @@
           </div>
         </div>
         <div class="row p-1">
-          <div class="col-9">
+          <div class="col-8">
           </div>
-          <div class="col-3 container rounded border border-dark text-center">
+          <div class="col-4 container rounded border border-dark text-center">
             <b class="fs-5">
               <span class="material-icons align-middle">
                 payments more_vert
@@ -75,14 +75,14 @@
   <!-- <div class="container rounded border p-1"> -->
   <div class="row p-2">
     <div class="col-12 container-fluid rounded border border-dark">
-      <table class="table border-dark mb-0">
+      <table class="table table-hover border-dark mb-0">
         <thead>
           {% if object.status == 'draft' %}
-            <th style="width:45%">Code</th>
+            <th style="width:50%">Code</th>
             <th class="text-end" style="width:15%">QTY</th>
             <th class="text-end" style="width:15%">Price</th>
             <th class="text-end" style="width:15%">Total</th>
-            <th class="text-end" style="width:10%"></th>
+            <th class="text-end" style="width:5%"></th>
           {% else %}
             <th style="width:55%">Code</th>
             <th class="text-end" style="width:15%">QTY</th>
@@ -92,28 +92,29 @@
         </thead>
         <tbody>
           {% for line in lines %}
-            <tr>
-              {% if object.status == 'draft' %}
-                <td class="hidden">{{ line.id }}</td>
-                <td style="width:45%">{{ line.item }}</td>
-                <td class="text-end" style="width:15%">{{ line.qty }}</td>
-                <td class="text-end" style="width:15%">{{ line.price }}</td>
-                <td class="text-end" style="width:15%">{{ line.total }}</td>
-                <td class="text-end" style="width:10%">
-                  <div>
-                    <a onclick="edit_line({{line.id}})" type="button" class="material-icons">
-                      edit 
-                    </a>
-                    <a onclick="delete_line({{line.id}})" type="button" class="material-icons">
-                      delete
-                    </a>
-                </td>
+            {% if object.status == 'draft' %}
+              <tr onclick="edit_line({{line.id}})">
             {% else %}
-                <td class="hidden">{{ line.id }}</td>
-                <td style="width:55%">{{ line.item }}</td>
-                <td class="text-end" style="width:15%">{{ line.qty }}</td>
-                <td class="text-end" style="width:15%">{{ line.price }}</td>
-                <td class="text-end" style="width:15%">{{ line.total }}</td>
+              <tr>
+            {% endif %}
+            {% if object.status == 'draft' %}
+              <td class="hidden">{{ line.id }}</td>
+              <td style="width:50%">{{ line.item }}</td>
+              <td class="text-end" style="width:15%">{{ line.qty }}</td>
+              <td class="text-end" style="width:15%">{{ line.price }}</td>
+              <td class="text-end" style="width:15%">{{ line.total }}</td>
+              <td class="text-end" style="width:5%">
+                <div>
+                  <span onclick="delete_line({{line.id}})" type="button" class="material-icons">
+                    delete
+                  </span>
+              </td>
+            {% else %}
+              <td class="hidden">{{ line.id }}</td>
+              <td style="width:55%">{{ line.item }}</td>
+              <td class="text-end" style="width:15%">{{ line.qty }}</td>
+              <td class="text-end" style="width:15%">{{ line.price }}</td>
+              <td class="text-end" style="width:15%">{{ line.total }}</td>
             {% endif %}
             </tr>
           {% endfor %}

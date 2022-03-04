@@ -15,7 +15,7 @@
     </thead>
     <tbody>
       {% for invoice in object_list %}
-      <tr onclick="invoice_detail({{invoice.id}})">
+      <tr onclick="window.location='detail/{{invoice.id}}'">
         <td style="width:15%">{{ invoice.code }}</td>
         <td style="width:15%">{{ invoice.date }}</td>
         <td style="width:30%">{{ invoice.partner }}</td>
@@ -37,5 +37,4 @@
     </tbody>
   </table>
   {% include 'main/footer.html' %}
-</div>
 {% endblock content %}

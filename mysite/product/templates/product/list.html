@@ -2,88 +2,35 @@
 {% load static %}
 {% block content %}
 <br>
-<div class="container mx-auto mt-6">
-  <table class="table">
+<div class="container-fluid rounded border border-dark mt-2">
+  <table class="table table-hover mb-0">
     <thead>
-      <th>Code</th>
-      <th>Price</th>
-      <th>Purchase</th>
-      <th>Description</th>
-      <th>Type</th>
-      <th>QTY</th>
+      <th style="width:20%">Code</th>
+      <th style="width:35%">Description</th>
+      <th class="text-end"  style="width:10%">Price</th>
+      <th class="text-end"  style="width:10%">Cost</th>
+      <th class="text-end"  style="width:10%">Type</th>
+      <th class="text-end"  style="width:10%">QTY</th>
+      <th style="width:5%"></th>
     </thead>
     <tbody>
       {% for product in object_list %}
-      <tr>
-        <td>{{ product.code }}</td>
-        <td>{{ product.price }}</td>
-        <td>{{ product.purchase }}</td>
-        <td>{{ product.descrip }}</td>
-        <td>{{ product.type }}</td>
-        <td>{{ product.qty }}</td>
-        <td>
-          <div class="form-group row">
-            <div class="form-group col">
-              <a href="{% url 'product:edit' pk=product.id %}" class="btn btn-success form-control col-3 mx-2">Edit</a>
-            </div>
-            <div class="form-group col">
-            <a href="{% url 'product:delete' pk=product.id %}" class="btn btn-danger form-control col-3 mx-2">Delete</a>
-            </div>
-          </div>
+      <tr onclick="window.location='detail/{{product.id}}'">
+        <td style="width:20%">{{ product.code }}</td>
+        <td style="width:35%">{{ product.descrip }}</td>
+        <td class="text-end" style="width:10%">{{ product.price }}</td>
+        <td class="text-end"  style="width:10%">{{ product.cost }}</td>
+        <td class="text-end" style="width:10%">{{ product.type }}</td>
+        <td class="text-end" style="width:10%">{{ product.qty }}</td>
+        <td style="width:5%%">
+            <span href="{% url 'product:delete' pk=product.id %}" class="material-icons">
+              delete
+            </span>
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
-  <nav aria-label="Pagination Bar">
-  <ul class="pagination">
-      <li class="page-item">
-          <a class="page-link" href="?page=1">
-            <span aria-hidden="true">&laquo;&laquo;</span>
-          </a>
-      </li>
-    {% if page_obj.has_previous %}
-      <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
-      </li>
-    {% else %}
-      <li class="page-item">
-          <a class="page-link" href="#">
-            <span aria-hidden="true">&laquo;</span>
-          </a>
-      </li>
-    {% endif %}
-    <li class="page-item active">
-      <a class="page-link" href="#">{{page_obj.number}}</a>
-    </li>
-
-    {% if page_obj.has_next %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
-      </li>
-      <li class="page-item">
-        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    {% else %}
-      <li class="page-item">
-        <a class="page-link" href="#">
-          <span aria-hidden="true">&raquo;</span>
-        </a>
-      </li>
-    {% endif %}
-      <li class="page-item">
-          <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-            <span aria-hidden="true">&raquo;&raquo;</span>
-          </a>
-      </li>
-  </ul>
-</nav>
+  {% include 'main/footer.html' %}
 </div>
 {% endblock content %}
