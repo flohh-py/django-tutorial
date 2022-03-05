@@ -14,5 +14,6 @@ urlpatterns = [
     path('delete_line/<int:pk>', InvoiceLineDelete.as_view(), name='delete_line'),
     path('edit_line/<int:pk>', InvoiceLineEdit.as_view(), name='edit_line'),
 
-    path('crete_stockentry/<int:invo_id>', CreateStockEntry.as_view(), name='create_sotckentry'),
+    path('create_stockentry/<int:invo_id>', CreateStockEntry.as_view(), name='create_stockentry'),
+    path('list_stockentry/<int:invo_id>', ListStockEntry.as_view(), name='create_sotckentry'),
 ]

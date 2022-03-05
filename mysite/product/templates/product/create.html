@@ -1,11 +1,12 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
-<br>
-<div class="container mx-auto mt-6">
+<script src="{% static 'js/stock.js' %}" type="text/javascript"></script>
+<link href="{% static 'css/stock.css' %}" rel="stylesheet" />
+<div class="container rounded border border-black mx-auto mt-2">
   <form action='.' method='POST'>{% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-success"/>
+    <button type="submit" class="btn btn-success mt-2">
       Save
     </button>
   </form>

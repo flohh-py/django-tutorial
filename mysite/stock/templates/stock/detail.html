@@ -32,14 +32,14 @@
     </div>
     <div class="col-4">
       <div class="row p-1">
-        <div class="col-9">
+        <div class="col-8">
         </div>
         {% if object.status == 'draft' %}
-          <div class="col-3 container rounded border text-center bg-secondary">
+          <div class="col-4 container rounded border text-center bg-secondary">
         {% elif object.status == 'submitted' %}
-          <div class="col-3 container rounded border text-center bg-primary">
+          <div class="col-4 container rounded border text-center bg-primary">
         {% elif object.status == 'cancelled' %}
-          <div class="col-3 container rounded border text-center bg-danger">
+          <div class="col-4 container rounded border text-center bg-danger">
         {% endif %}
           <b>{{ object.get_status_display }}</b>
         </div>
@@ -151,10 +151,8 @@
   <!-- Item Modal -->
   <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header" id="item-modal-content">
+      <div class="modal-content" id="item-modal-content">
           <!-- ITEM -->
-        </div>
       </div>
     </div>
   </div>

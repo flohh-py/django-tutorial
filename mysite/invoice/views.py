@@ -122,6 +122,7 @@ class CreateStockEntry(CreateView):
         return context
 
     def form_valid(self, form):
+        print("FORM VALID ON CREATE STE")
         context = self.get_context_data()
         self.object = form.save()
         self.object.parent = context['invo_obj']
@@ -140,3 +141,18 @@ class CreateStockEntry(CreateView):
 
     def get_success_url(self):
         return reverse('stock:detail', kwargs={'pk':self.object.id})
+
+
+class ListStockEntry(ListView):
+    model = StockEntry
+    template_name = 'invoice/list_ste.html'
+    paginate_by = 5
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        invo_obj = Invoice.objects.get(pk=self.kwargs['invo_id'])
+        ste_objs = StockEntry.objects.filter(parent=invo_obj.id)
+        context['invoice'] = invo_obj
+        context['object_list'] = ste_objs
+        context['ste_count'] = ste_objs.count()
+        return context

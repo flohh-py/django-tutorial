@@ -9,10 +9,10 @@ PROD_TYPE = [
 class Product(models.Model):
     code = models.CharField(max_length=50, null=True)
     type = models.CharField(choices=PROD_TYPE, default='stock', null=True, max_length=10)
-    price = models.FloatField(default=0.0)
-    cost = models.FloatField(default=0.0)
+    price = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
+    cost = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     descrip = models.CharField(max_length=120)
-    qty = models.FloatField(default=0.0)
+    qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     def __str__(self):
         return self.code

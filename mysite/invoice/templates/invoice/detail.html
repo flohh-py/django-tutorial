@@ -48,7 +48,7 @@
         <div class="row p-1">
           <div class="col-8">
           </div>
-          <div onclick="create_ste({{object.id}})" class="col-4 container rounded border border-dark text-center">
+          <div onclick="list_ste({{object.id}})" class="col-4 container rounded border border-dark text-center">
             <b class="fs-5">
               <span class="material-icons align-middle">
                 local_shipping more_vert
@@ -174,7 +174,7 @@
   <div>
 
   <!-- Item Modal -->
-  <div class="modal fade" id="itemModal" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
+  <div class="modal fade" id="itemModal" data-backdrop="true" tabindex="-1" aria-labelledby="itemModal" aria-hidden="true">
     <div class="modal-dialog modal-lg">
       <div class="modal-content" id="item-modal-content">
         <!-- ITEM -->

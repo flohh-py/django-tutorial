@@ -66,8 +66,17 @@ function delete_line(id) {
   $("#itemModal").modal("toggle");
 }
 function create_ste(invo_id) {
-  $.get("/invoice/crete_stockentry/" + invo_id, function(data) {
+  console.log("CREATE_STE")
+  // $("#itemModal").modal("toggle");
+  $.get("/invoice/create_stockentry/" + invo_id, function(data) {
     $("#item-modal-content").html(data)
+  })
+  // $("#itemModal").modal("toggle");
+}
+function list_ste(invo_id) {
+  $.get("/invoice/list_stockentry/" + invo_id, function(data) {
+    $("#item-modal-content").html(data)
+    // $("#item-modal-content").modal({ backdrop: 'static', keyboard: false })
   })
   $("#itemModal").modal("toggle");
 }
