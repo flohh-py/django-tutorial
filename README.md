@@ -1,2 +1,2 @@
-# django-tutorial
-Django Tutorial
+# Syskuera
+A django project pseudo erp as tutorial example
