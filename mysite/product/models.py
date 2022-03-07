@@ -29,8 +29,8 @@ class Product(models.Model):
             new_cost = line.price * line.qty
 
             if type == 'in':
-                prod.qty = prod.qty + line.qty
                 prod.cost = ((old_cost + new_cost) / (prod.qty + line.qty))
+                prod.qty = prod.qty + line.qty
 
             if type == 'out':
                 prod.qty = prod.qty - line.qty
