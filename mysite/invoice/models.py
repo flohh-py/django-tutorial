@@ -103,6 +103,7 @@ class InvoiceLine(models.Model):
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=INVO_STATUS, default='draft', null=True, max_length=10)
     qty_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
+    qty_stock = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
