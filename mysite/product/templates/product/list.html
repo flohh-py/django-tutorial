@@ -16,7 +16,7 @@
     </thead>
     <tbody>
       {% for product in object_list %}
-      <tr onclick="window.location='detail/{{product.id}}'">
+      <tr onclick="window.location='edit/{{product.id}}'">
         <td style="width:20%">{{ product.code }}</td>
         <td style="width:35%">{{ product.descrip }}</td>
         <td class="text-end" style="width:10%">{{ product.price }}</td>
