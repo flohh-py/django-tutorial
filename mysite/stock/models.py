@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.db import models
 from product.models import Product
-from invoice.models import Invoice
+from invoice.models import Invoice, InvoiceLine
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from main.models import NamingSeries as NS
@@ -82,12 +82,13 @@ class StockEntry(models.Model):
             
 
 class StockEntryLine(models.Model):
-    item = models.ForeignKey(Product, related_name='str_line_item', on_delete=models.CASCADE)
-    parent = models.ForeignKey(StockEntry, related_name='ste_line_parent', on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Product, related_name='str_line_item', on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey(StockEntry, related_name='ste_line_parent', on_delete=models.SET_NULL, null=True)
     qty = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
+    invo_line = models.ForeignKey(InvoiceLine, related_name='invo_line_parent', on_delete=models.SET_NULL, null=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.total = self.qty * self.price
@@ -96,18 +97,24 @@ class StockEntryLine(models.Model):
     @classmethod
     def submit_stock_lines(cls, parent=None):
         lines = cls.objects.all().filter(parent=parent.id)
-        if lines:
+        if lines: 
             for line in lines:
                 if line.item.type == 'stockable':
+                    line.invo_line.qty_stock = line.invo_line.qty_stock - line.qty
+                    line.invo_line.save()
+                    line.invo_line.update_qty_status(line.invo_line)
                     if parent.type == 'receipt':
                         if line.item.update_product_stock(line, type='in'):
                             line.status = 'submitted'
+                            line.save()
                     if parent.type == 'delivery':
                         if line.item.update_product_stock(line, type='out'):
                             line.status = 'submitted'
+                            line.save()
             return True
         else:
             return False
+
 
     @classmethod
     def cancel_stock_lines(cls, parent=None):
@@ -126,5 +133,5 @@ def save_calculate_ste_lines(sender, instance, **kwargs):
     instance.parent.calculate_total(instance.parent.id)
 
 @receiver(post_delete, sender=StockEntryLine)
-def delete_calculate_str_lines(sender, instance, **kwargs):
+def delete_calculate_ste_lines(sender, instance, **kwargs):
     instance.parent.calculate_total(instance.parent.id)

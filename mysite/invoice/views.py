@@ -122,17 +122,17 @@ class CreateStockEntry(CreateView):
         return context
 
     def form_valid(self, form):
-        print("FORM VALID ON CREATE STE")
         context = self.get_context_data()
         self.object = form.save()
         self.object.parent = context['invo_obj']
         invoice_lines = InvoiceLine.objects.all().filter(parent=context['invo_obj'].id)
         for il in invoice_lines:
             line = StockEntryLineForm({
+                'invo_line': il,
                 'parent': self.object,
                 'item': il.item,
-                'qty': il.qty,
-                'price': il.price
+                'qty': il.qty_stock,
+                'price': il.price,
                 })
             if line.is_valid():
                 line.save()

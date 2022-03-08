@@ -48,12 +48,19 @@
         <div class="row p-1">
           <div class="col-8">
           </div>
-          <div onclick="list_ste({{object.id}})" class="col-4 container rounded border border-dark text-center">
+          {% if object.qty_status == 'pending' %}
+          <div onclick="list_ste({{object.id}})" class="col-4 container rounded border border-dark text-center bg-secondary">
+          {% elif object.qty_status == 'partial' %}
+          <div onclick="list_ste({{object.id}})" class="col-4 container rounded border border-dark text-center bg-warning">
+          {% elif object.qty_status == 'complete' %}
+          <div onclick="list_ste({{object.id}})" class="col-4 container rounded border border-dark text-center bg-success">
+          {% endif %}
             <b class="fs-5">
-              <span class="material-icons align-middle">
+                <span class="material-icons align-middle">
                 local_shipping more_vert
               </span> 
               {{ object.get_ste_count}}
+
             </b>
           </div>
         </div>

@@ -29,7 +29,7 @@ PAY_STATUS = [
 ]
 
 class Invoice(models.Model):
-    code = models.CharField(max_length=10, null=True)
+    code = models.CharField(max_length=12, null=True)
     date = models.DateField(null=True)
     partner = models.ForeignKey(Partner, related_name='invoice_partner', on_delete=models.SET_NULL, null=True)
     type = models.CharField(choices=INVO_TYPE, default='', null=True, max_length=10)
@@ -62,6 +62,7 @@ class Invoice(models.Model):
             invo = cls.objects.get(pk=id)
             if InvoiceLine.submit_invoice_lines(invo):
                 invo.status = 'submitted'
+                invo.outstanding = invo.total
                 invo.save()
 
     @classmethod
@@ -116,6 +117,7 @@ class InvoiceLine(models.Model):
         if lines:
             for line in lines:
                 line.status = 'submitted'
+                line.qty_stock = line.qty
                 line.save()
             return True
         else:
@@ -131,6 +133,22 @@ class InvoiceLine(models.Model):
             return True
         else:
             return False
+
+    def update_qty_status(self, invo_line=None):
+        invl = invo_line
+
+        if invl.qty_stock <= 0:
+            invl.qty_status = 'complete'
+            invl.parent.qty_status = 'complete'
+
+        if invl.qty_stock > 0 and invl.qty_stock < invl.qty:
+            invl.qty_status = 'partial'
+            # if any line is partial invoice will also turn partial
+            invl.parent.qty_status = 'partial'
+
+        invl.save()
+        invl.parent.save()
+        
 
 @receiver(post_save, sender=InvoiceLine)
 def save_calculate_inv_lines(sender, instance, **kwargs):

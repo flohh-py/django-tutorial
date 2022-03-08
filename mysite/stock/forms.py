@@ -23,10 +23,12 @@ class StockEntryLineForm(forms.ModelForm):
             'parent',
             'item',
             'qty',
-            'price'
+            'price',
+            'invo_line',
         ]
         widgets = {
             'parent': forms.HiddenInput(),
+            'invo_line': forms.HiddenInput(),
         }
 
 StockEntryLineIF= inlineformset_factory(
