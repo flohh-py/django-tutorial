@@ -88,7 +88,7 @@ class StockEntryLine(models.Model):
     price = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
     status = models.CharField(choices=ENTRY_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=10)
-    invo_line = models.ForeignKey(InvoiceLine, related_name='invo_line_parent', on_delete=models.SET_NULL, null=True)
+    invo_line = models.ForeignKey(InvoiceLine, related_name='invo_line_parent', on_delete=models.SET_NULL, null=True, blank=True)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         self.total = self.qty * self.price
@@ -100,9 +100,10 @@ class StockEntryLine(models.Model):
         if lines: 
             for line in lines:
                 if line.item.type == 'stockable':
-                    line.invo_line.qty_stock = line.invo_line.qty_stock - line.qty
-                    line.invo_line.save()
-                    line.invo_line.update_qty_status(line.invo_line)
+                    if line.invo_line:
+                        line.invo_line.qty_stock = line.invo_line.qty_stock - line.qty
+                        line.invo_line.save()
+                        line.invo_line.update_qty_status(line.invo_line)
                     if parent.type == 'receipt':
                         if line.item.update_product_stock(line, type='in'):
                             line.status = 'submitted'
