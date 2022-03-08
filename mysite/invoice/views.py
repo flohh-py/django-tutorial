@@ -127,15 +127,16 @@ class CreateStockEntry(CreateView):
         self.object.parent = context['invo_obj']
         invoice_lines = InvoiceLine.objects.all().filter(parent=context['invo_obj'].id)
         for il in invoice_lines:
-            line = StockEntryLineForm({
-                'invo_line': il,
-                'parent': self.object,
-                'item': il.item,
-                'qty': il.qty_stock,
-                'price': il.price,
-                })
-            if line.is_valid():
-                line.save()
+            if il.qty_stock > 0:
+                line = StockEntryLineForm({
+                    'invo_line': il,
+                    'parent': self.object,
+                    'item': il.item,
+                    'qty': il.qty_stock,
+                    'price': il.price,
+                    })
+                if line.is_valid():
+                    line.save()
 
         return super(CreateStockEntry, self).form_valid(form)
 
