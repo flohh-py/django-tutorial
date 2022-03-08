@@ -1,16 +1,38 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
-<br>
-<div class="container mx-auto mt-6">
-  <form action='.' method='POST'>{% csrf_token %}
-    <h1>TEST</h1>
-    {{ object.code }}
-    {{ object.type }}
-    {{ object.price }}
-    {{ object.purchase }}
-    {{ object.descrip }}
-    {{ object.qty }}
-  </form>
+<script src="{% static 'js/product.js' %}" type="text/javascript"></script>
+<link href="{% static 'css/product.css' %}" rel="stylesheet"/>
+<div class="container-fluid rounded border border-dark mt-2 p-2">
+  <div class="row p-1">
+    <div class="col-6">
+      <p> Code: {{ object.code }}</p>
+      <p> Type: {{ object.get_type_display }}</p>
+    </div>
+    <div class="col-6">
+      <p> Price: {{ object.price }}</p>
+      <p> Cost: {{ object.cost }}</p>
+    </div>
+  </div>
+  <div class="row p-1">
+    <div class="col-6">
+      <p> Descrip: {{ object.descrip }}</p>
+    </div>
+    <div class="col-6">
+      <p> Qty: {{ object.qty }}</p>
+    </div>
+  </div>
+  <div class="row p-1">
+    <div class="col-6">
+    </div>
+    <div class="col-6 text-end">
+      <a href="{% url 'product:delete' object.id %}" type="button" class="btn btn-danger">
+        Delete
+      </a>
+      <a href="{% url 'product:edit' object.id %}" type="button" class="btn btn-success">
+        Edit
+      </a>
+    </div>
+  </div>
 </div>
 {% endblock content %}

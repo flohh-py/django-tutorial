@@ -37,7 +37,7 @@ class Command(BaseCommand):
         for _ in range(20):
             prod = {
                 'code' : 'Product '+ str(fake.products()),
-                'type' : 'stock',
+                'type' : 'stockable',
                 'descrip' : fake.text(max_nb_chars=20),
                 'price': round(random.uniform(100.99, 200.99), 2),
                 'cost': round(random.uniform(10.99, 50.99), 2),

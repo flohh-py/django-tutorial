@@ -98,12 +98,13 @@ class StockEntryLine(models.Model):
         lines = cls.objects.all().filter(parent=parent.id)
         if lines:
             for line in lines:
-                if parent.type == 'receipt':
-                    if line.item.update_product_stock(line, type='in'):
-                        line.status = 'submitted'
-                if parent.type == 'delivery':
-                    if line.item.update_product_stock(line, type='out'):
-                        line.status = 'submitted'
+                if line.item.type == 'stockable':
+                    if parent.type == 'receipt':
+                        if line.item.update_product_stock(line, type='in'):
+                            line.status = 'submitted'
+                    if parent.type == 'delivery':
+                        if line.item.update_product_stock(line, type='out'):
+                            line.status = 'submitted'
             return True
         else:
             return False

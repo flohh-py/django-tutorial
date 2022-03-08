@@ -1,14 +1,40 @@
 {% extends 'main/main.html' %}
 {% load static %}
 {% block content %}
-<br>
-<div class="container mx-auto mt-6">
-  <form method='POST'>
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success"/>
-      Save
-    </button>
+<div class="container rounded border border-black mx-auto mt-2">
+  <form action='.' method='POST'>{% csrf_token %}
+  <div class="row p-1">
+    <div class="col-6">
+      {{ form.code.label }}
+      {{ form.code }}
+      {{ form.type.label }}
+      {{ form.type }}
+    </div>
+    <div class="col-6">
+      {{ form.price.label }}
+      {{ form.price }}
+      {{ form.cost.label }}
+      {{ form.cost }}
+    </div>
+  </div>
+  <div class="row p-1">
+    <div class="col-6">
+      {{ form.descrip.label }}
+      {{ form.descrip }}
+    </div>
+    <div class="col-6">
+      {{ form.qty.label }}
+      {{ form.qty }}
+    </div>
+  </div>
+  <div class="row p-1">
+    <div class="col-6">
+    </div>
+    <div class="col-6 text-end">
+      <button type="submit" class="btn btn-success mt-2">
+        Save
+      </button>
+    </div>
   </form>
 </div>
 {% endblock content %}

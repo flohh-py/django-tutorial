@@ -43,7 +43,6 @@ class ProductUpdate(UpdateView):
 
 class ProductDetail(DetailView):
     model = Product
-    form_class = ProductForm
     template_name = 'product/detail.html'
     fields = "__all__"
     pk_url_kwarg = 'pk'
