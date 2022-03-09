@@ -18,9 +18,9 @@ class PartnerList(ListView):
         if self.is_ajax(request=self.request):
             ajax_val = self.request.GET['term']
             ajax_filter = ''
-            if self.request.GET['type'] == 'sell':
+            if self.request.GET['type'] in ('sell', 'receipt'):
                 ajax_filter = 'customer'
-            if self.request.GET['type'] == 'purchase':
+            if self.request.GET['type'] in ('purchase','pay'):
                 ajax_filter = 'supplier' 
             part_obj = Partner.objects.all().filter(
                 name__icontains=ajax_val,

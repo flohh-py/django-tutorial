@@ -90,10 +90,10 @@ class Invoice(models.Model):
         ste = StockEntry.objects.filter(parent=self.id).count()
         return ste
 
-    # def get_pay_count(self):
-    #     from stock.models import StockEntry
-    #     ste = StockEntry.objects.filter(parent=self.id).count()
-    #     return ste
+    def get_pay_count(self):
+        from paymententry.models import PaymentEntry
+        ste = PaymentEntry.objects.filter(parent=self.id).count()
+        return ste
 
 
 class InvoiceLine(models.Model):

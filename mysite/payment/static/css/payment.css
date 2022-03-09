@@ -1,0 +1,18 @@
+.hidden {
+  display: none;
+}
+#id_item {
+  width: 350;
+}
+#id_qty {
+  width: 140;
+}
+#id_price {
+  width: 140;
+}
+.pull-right {
+  float:right;
+}
+.container-bg {
+  background-color: rgb(0,0, 0);
+}

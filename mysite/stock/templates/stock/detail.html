@@ -21,8 +21,10 @@
       </div>
       <div class="row">
         <div class="col-4">
+          <a href="{% url 'invoice:detail' object.parent.id %}">
           {{ object.parent.label }}
           {{ object.parent }}
+          </a>
         </div>
         <div class="col-4">
           {{ object.type.label }}

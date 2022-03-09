@@ -46,6 +46,16 @@
           <li><a class="dropdown-item" href="{% url 'stock:create' %}">Create</a></li>
         </ul>
       </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="paymentDrop" role="button" data-bs-toggle="dropdown"
+          aria-expanded="false">
+          Payment
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="paymentDrop">
+          <li><a class="dropdown-item" href="{% url 'payment:list' %}">List</a></li>
+          <li><a class="dropdown-item" href="{% url 'payment:create' %}">Create</a></li>
+        </ul>
+      </li>
     </ul>
   </div>
 </nav>
