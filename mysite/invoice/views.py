@@ -2,6 +2,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
+from django.http import JsonResponse 
 from .models import Invoice, InvoiceLine
 from .forms import InvoiceForm, InvoiceLineIF, InvoiceLineForm
 from stock.models import StockEntry, StockEntryLine
@@ -11,7 +12,19 @@ from stock.forms import StockEntryForm, StockEntryLineForm, StockEntryLineIF
 class InvoiceList(ListView):
     model = Invoice
     template_name = 'invoice/list.html'
-    paginate_by = 20
+    paginate_by = 8
+
+    def is_ajax(self, request):
+        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+    def get(self, *args, **kwargs):
+        if self.is_ajax(request=self.request):
+            ajax_val = self.request.GET['term']
+            invo_obj = Invoice.objects.all().filter(code__icontains=ajax_val)
+            invoices = list(invo_obj.values())
+            return JsonResponse(invoices, safe=False)
+
+        return super(InvoiceList, self).get(*args, **kwargs)
 
 
 class InvoiceDetail(DetailView):

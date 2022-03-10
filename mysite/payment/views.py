@@ -65,7 +65,7 @@ class PaymentLineCreate(CreateView):
     pk_url_kwarg = 'pk'
 
     def post(self, request, *args, **kwargs):
-        return super(paymentLineCreate, self).post(request, *args, **kwargs)
+        return super(PaymentLineCreate, self).post(request, *args, **kwargs)
 
     def get_success_url(self):
         pk = self.request.POST['parent']
