@@ -12,15 +12,15 @@ $(document).ready(function() {
         };
       }
     },
-    minimumInputLength: 2
+    minimumInputLength: 1
   });
   $("#id_item").on("select2:select", function(e) {
     $.ajax({
       type: "GET",
       url: "/invoice/detail/" + $("#id_item").select2('data')[0].id
     }).then(function(data) {
-      $("#id_qty").val(1.0)
-      $("#id_price").val(data.price)
+      $("#id_outstanding").val(data.outstanding)
+      $("#id_total").val(data.total)
     })
   })
   $("#id_partner").select2({
@@ -59,14 +59,17 @@ function add_line(id) {
   })
   $("#itemModal").modal("toggle");
 }
-function delete_line(id) {
-  $.get("/payment/delete_line/" + id, function(data) {
-    $("#item-modal-content").html(data)
-  })
-  $("#itemModal").modal("toggle");
+function delete_line(data) {
+  $.ajax({
+    url: "/payment/delete_line/" + data['id'],
+    type: "POST",
+    headers: { "X-CSRFToken": data['token'] },
+  }).then(
+    location.reload()
+  )
+  // $("#itemModal").modal("toggle");
 }
 function create_ste(invo_id) {
-  console.log("CREATE_STE")
   // $("#itemModal").modal("toggle");
   $.get("/payment/create_stockentry/" + invo_id, function(data) {
     $("#item-modal-content").html(data)

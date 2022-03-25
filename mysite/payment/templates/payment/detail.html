@@ -89,15 +89,15 @@
                 <thead>
                   {% if object.status == 'draft' %}
                   <th style="width:50%">Code</th>
-                  <th class="text-end" style="width:15%">QTY</th>
-                  <th class="text-end" style="width:15%">Price</th>
                   <th class="text-end" style="width:15%">Total</th>
+                  <th class="text-end" style="width:15%">Outstanding</th>
+                  <th class="text-end" style="width:15%">Allocated</th>
                   <th class="text-end" style="width:5%"></th>
                   {% else %}
                   <th style="width:55%">Code</th>
-                  <th class="text-end" style="width:15%">QTY</th>
-                  <th class="text-end" style="width:15%">Price</th>
                   <th class="text-end" style="width:15%">Total</th>
+                  <th class="text-end" style="width:15%">Outstanding</th>
+                  <th class="text-end" style="width:15%">Allocated</th>
                   {% endif %}
                 </thead>
                 <tbody>
@@ -110,9 +110,9 @@
                     {% if object.status == 'draft' %}
                     <td class="hidden">{{ line.id }}</td>
                     <td style="width:50%">{{ line.item }}</td>
-                    <td class="text-end" style="width:15%">{{ line.qty }}</td>
-                    <td class="text-end" style="width:15%">{{ line.price }}</td>
                     <td class="text-end" style="width:15%">{{ line.total }}</td>
+                    <td class="text-end" style="width:15%">{{ line.outstanding }}</td>
+                    <td class="text-end" style="width:15%">{{ line.allocated }}</td>
                     <td class="text-end" style="width:5%">
                       <div>
                         <span onclick="delete_line({{line.id}})" type="button" class="material-icons">
@@ -122,9 +122,9 @@
                     {% else %}
                     <td class="hidden">{{ line.id }}</td>
                     <td style="width:55%">{{ line.item }}</td>
-                    <td class="text-end" style="width:15%">{{ line.qty }}</td>
-                    <td class="text-end" style="width:15%">{{ line.price }}</td>
                     <td class="text-end" style="width:15%">{{ line.total }}</td>
+                    <td class="text-end" style="width:15%">{{ line.outstanding }}</td>
+                    <td class="text-end" style="width:15%">{{ line.allocated }}</td>
                     {% endif %}
                   </tr>
                   {% endfor %}

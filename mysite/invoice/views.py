@@ -34,6 +34,16 @@ class InvoiceDetail(DetailView):
     fields = "__all__"
     pk_url_kwarg = 'pk'
 
+    def is_ajax(self, request):
+        return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+    def get(self, *args, **kwargs):
+        if self.is_ajax(request=self.request):
+            inv_data = Invoice.objects.filter(id=kwargs.get('pk')).values()[0]
+            return JsonResponse(inv_data, safe=False)
+
+        return super(InvoiceDetail, self).get(*args,**kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         lines = InvoiceLine.objects.all().filter(parent=self.kwargs['pk'])

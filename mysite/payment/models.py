@@ -36,12 +36,41 @@ class Payment(models.Model):
     def get_absolute_url(self):
         return reverse('paymenentry:detail', args=[self.id])
 
+    def submit_payment(self):
+        if self.status == 'draft':
+            self.status = 'submitted'
+            lines = self.payment_line.all()
+            print(lines)
+            for line in lines:
+                line.submit_pay_line()
+                line.save()
+            self.save()
+
+    def cancel_payment(self):
+        if self.status == 'submitted':
+            self.status = 'cancelled'
+            lines = self.payment_line.all()
+            for line in lines:
+                line.cancel_pay_line()
+                line.save()
+            self.save()
+
 
 class PaymentLine(models.Model):
     item = models.ForeignKey(Invoice, related_name='pay_line_invo', on_delete=models.SET_NULL, null=True)
-    parent = models.ForeignKey(Payment, related_name='pay_line_parant', on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey(Payment, related_name='payment_line', on_delete=models.SET_NULL, null=True)
     type = models.CharField(choices=PAY_TYPE, default='', null=True, max_length=10)
     status = models.CharField(choices=PAY_STATUS, default='draft', null=True, max_length=10)
     total = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     allocated = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
     outstanding = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
+
+    def submit_pay_line(self):
+        if self.status == 'draft':
+            self.status = 'submitted'
+            self.outstanding = self.outstanding + self.allocated
+        
+    def cancel_pay_line(self):
+        if self.status == 'submitted':
+            self.status = 'cancelled'
+            self.outstanding = self.outstanding - self.allocated

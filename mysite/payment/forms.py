@@ -25,8 +25,8 @@ class PaymentLineForm(forms.ModelForm):
             'parent',
             'outstanding',
             'allocated',
+            'total',
         ]
         widgets = {
             'parent': forms.HiddenInput(),
-            'outstanding': forms.HiddenInput(),
         }

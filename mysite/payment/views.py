@@ -4,6 +4,7 @@ from .models import Payment, PaymentLine
 from .forms import PaymentForm, PaymentLineForm
 from django.urls import reverse
 from django.shortcuts import redirect
+from django.http import HttpResponseForbidden
 
 class PaymentList(ListView):
     model = Payment
@@ -19,7 +20,8 @@ class PaymentDetail(DeleteView):
 
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
-        # context['lines']
+        lines = PaymentLine.objects.all().filter(parent=self.kwargs['pk'])
+        context['lines'] = lines
         return context
 
 
@@ -50,10 +52,10 @@ class PaymentUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         obj = self.get_object()
         if kwargs.get('process') == 'submit':
-            obj.submit_payment(obj.id)
+            obj.submit_payment()
         
         if kwargs.get('process') == 'cancel':
-            obj.cancel_payment(obj.id)
+            obj.cancel_payment()
 
         return redirect('payment:detail', pk=obj.id)
 
@@ -87,6 +89,10 @@ class PaymentLineDelete(DeleteView):
     model = PaymentLine
     template_name = 'payment/delete_line.html'
     pk_url_kwarg = 'pk'
+
+    def dispatch(self, request, *args, **kwargs):
+        handler = getattr(self, 'delete')
+        return handler(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('payment:detail', kwargs={'pk':self.object.parent.id})

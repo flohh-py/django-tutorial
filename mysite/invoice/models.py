@@ -38,6 +38,7 @@ class Invoice(models.Model):
     qty_status = models.CharField(choices=STOCK_STATUS, default='pending', null=True, max_length=10)
     pay_status = models.CharField(choices=PAY_STATUS, default='pending', null=True, max_length=10)
     outstanding = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
+    payments = models.DecimalField(default=0.0, decimal_places=2, max_digits=12)
 
     class Meta:
         ordering = ['code']
@@ -83,6 +84,7 @@ class Invoice(models.Model):
                 total += line.total
 
             invo.total = total
+            invo.outstanding = total - invo.payments
             invo.save()
             
     def get_ste_count(self):
