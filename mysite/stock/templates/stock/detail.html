@@ -21,7 +21,9 @@
       </div>
       <div class="row">
         <div class="col-4">
-          <a href="{% url 'invoice:detail' object.parent.id %}">
+          {% if object.parent %}
+            <a href="{% url 'invoice:detail' object.parent.id %}">
+          {% endif %}
           {{ object.parent.label }}
           {{ object.parent }}
           </a>
