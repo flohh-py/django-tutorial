@@ -1,7 +1,7 @@
 from django.urls import path, include
-from .views import *
+from .views import MainView
+
 
 urlpatterns = [
     path('', MainView.as_view(), name='main_url'),
-    path('product/', include('product.urls'))
 ]
