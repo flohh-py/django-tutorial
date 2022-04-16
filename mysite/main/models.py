@@ -55,6 +55,7 @@ class MainAccontManager(BaseUserManager):
 class MainUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     user_name = models.CharField(max_length=50, unique=True)
+    create_date = models.DateField(default=timezone.now)
 
     is_manager = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
