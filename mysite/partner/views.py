@@ -4,12 +4,13 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse 
 from .models import Partner
 from .forms import PartnerForm
+from main.views import BaseView
 
-
-class PartnerList(ListView):
+class PartnerList(BaseView, ListView):
     model = Partner
     template_name = 'partner/list.html'
     paginate_by = 10
+    permission_required = 'partner.view_partner'
 
     def is_ajax(self, request):
         return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -32,23 +33,26 @@ class PartnerList(ListView):
         return super(PartnerList, self).get(*args,**kwargs)
 
 
-class PartnerCreate(CreateView):
+class PartnerCreate(BaseView, CreateView):
     model = Partner
     form_class = PartnerForm
     template_name = 'partner/create.html'
     success_url = reverse_lazy('partner:list')
+    permission_required = 'partner.add_partner'
 
 
-class PartnerUpdate(UpdateView):
+class PartnerUpdate(BaseView, UpdateView):
     model = Partner
     form_class = PartnerForm
     template_name = 'partner/update.html'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('partner:list')
+    permission_required = 'partner.change_partner'
 
 
-class PartnerDelete(DeleteView):
+class PartnerDelete(BaseView, DeleteView):
     model = Partner
     template_name = 'partner/delete.html'
     success_url = reverse_lazy('partner:list')
     pk_url_kwarg = 'pk'
+    permission_required = 'partner.delete_partner'

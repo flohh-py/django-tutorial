@@ -10,7 +10,7 @@ class UserAdminConfig(UserAdmin):
                     'is_active', 'is_manager', 'is_superuser',
                     'is_staff',)
     fieldsets = (
-        (None, {'fields': ('user_name', 'email',)}),
+        (None, {'fields': ('user_name', 'email','password',)}),
         ('Permissions',
             {'fields': (
                 'is_staff','is_active','is_manager',
@@ -22,7 +22,7 @@ class UserAdminConfig(UserAdmin):
     add_fieldsets = (
         (None, {
              'classes': ('wide',),
-             'fields': ('user_name', 'email', 'create_date',
+             'fields': ('user_name', 'email','password1','password2', 'create_date',
                     'is_active', 'is_manager', 'is_superuser',
                     'is_staff','groups', 'user_permissions')
          }),
