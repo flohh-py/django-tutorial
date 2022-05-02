@@ -4,20 +4,23 @@ from django.urls import reverse_lazy, reverse
 from django.shortcuts import redirect
 from .models import StockEntry, StockEntryLine
 from .forms import StockEntryForm, StockEntryLineForm, StockEntryLineIF
+from main.views import BaseView
 
 
-class StockEntryList(ListView):
+class StockEntryList(BaseView, ListView):
     model = StockEntry
     template_name = 'stock/list.html'
     paginate_by = 8
+    permission_required = 'stockentry.view_stockentry'
 
 
-class StockEntryDetail(DetailView):
+class StockEntryDetail(BaseView, DetailView):
     model = StockEntry
     form_class = StockEntryForm
     template_name = 'stock/detail.html'
     fields = "__all__"
     pk_url_kwarg = 'pk'
+    permission_required = 'stockentry.view_stockentry'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -28,22 +31,24 @@ class StockEntryDetail(DetailView):
         return context
         
 
-class StockEntryCreate(CreateView):
+class StockEntryCreate(BaseView, CreateView):
     model = StockEntry
     form_class = StockEntryForm
     template_name = 'stock/create.html'
+    permission_required = 'stockentry.add_stockentry'
 
     def get_success_url(self):
         return reverse('stock:detail', kwargs={'pk':self.object.id})
 
 
-class StockEntryUpdate(UpdateView):
+class StockEntryUpdate(BaseView, UpdateView):
     model = StockEntry
     form_class = StockEntryForm
     formset_class = StockEntryLineIF
     template_name = 'stock/detail.html'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('stock:detail')
+    permission_required = 'stockentry.change_stockentry'
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -67,11 +72,12 @@ class StockEntryUpdate(UpdateView):
 
         return redirect('stock:detail', pk=obj.id)
 
-class StockEntryLineCreate(CreateView):
+class StockEntryLineCreate(BaseView, CreateView):
     model = StockEntryLine
     form_class = StockEntryLineForm
     template_name = 'stock/add_line.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'stockentryline.add_stockentryline'
 
     # def get_context_data(self, **kwargs):
     #     context = super().get_context_data(**kwargs)
@@ -85,21 +91,23 @@ class StockEntryLineCreate(CreateView):
         return reverse('stock:detail', kwargs={'pk':parent_id})
 
 
-class StockEntryLineEdit(UpdateView):
+class StockEntryLineEdit(BaseView, UpdateView):
     model = StockEntryLine
     form_class = StockEntryLineForm
     template_name = 'stock/edit_line.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'stockentryline.change_stockentryline'
 
     def get_success_url(self):
         line = StockEntryLine.objects.get(pk=self.kwargs['pk'])
         return reverse('stock:detail', kwargs={'pk':line.parent.id})
 
 
-class StockEntryLineDelete(DeleteView):
+class StockEntryLineDelete(BaseView, DeleteView):
     model = StockEntryLine
     template_name = 'stock/delete_line.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'stockentryline.delete_stockentryline'
 
     def get_success_url(self):
         return reverse('stock:detail', kwargs={'pk':self.object.parent.id})

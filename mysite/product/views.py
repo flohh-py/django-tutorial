@@ -5,12 +5,14 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse 
 from .models import Product
 from .forms import ProductForm
+from main.views import BaseView
 
 
-class ProductList(ListView):
+class ProductList(BaseView, ListView):
     model = Product
     template_name = 'product/list.html'
     paginate_by = 8
+    permission_required = 'product.view_product'
 
     def is_ajax(self, request):
         return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -25,27 +27,30 @@ class ProductList(ListView):
         return super(ProductList, self).get(*args,**kwargs)
 
 
-class ProductCreate(CreateView):
+class ProductCreate(BaseView, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'product/create.html'
     success_url = reverse_lazy('product:list')
+    permission_required = 'product.add_product'
 
 
-class ProductUpdate(UpdateView):
+class ProductUpdate(BaseView, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'product/update.html'
     # fields = "__all__"
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('product:list')
+    permission_required = 'product.change_product'
 
 
-class ProductDetail(DetailView):
+class ProductDetail(BaseView, DetailView):
     model = Product
     template_name = 'product/detail.html'
     fields = "__all__"
     pk_url_kwarg = 'pk'
+    permission_required = 'product.view_product'
 
     def is_ajax(self, request):
         return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -58,11 +63,12 @@ class ProductDetail(DetailView):
         return super(ProductDetail, self).get(*args,**kwargs)
 
 
-class ProductDelete(DeleteView):
+class ProductDelete(BaseView, DeleteView):
     model = Product
     template_name = 'product/delete.html'
     success_url = reverse_lazy('product:list')
     pk_url_kwarg = 'pk'
+    permission_required = 'product.delete_product'
 
 # class ProductCreate(View):
 #     template = 'product/product_create.html'

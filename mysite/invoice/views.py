@@ -7,12 +7,14 @@ from .models import Invoice, InvoiceLine
 from .forms import InvoiceForm, InvoiceLineIF, InvoiceLineForm
 from stock.models import StockEntry, StockEntryLine
 from stock.forms import StockEntryForm, StockEntryLineForm, StockEntryLineIF
+from main.views import BaseView
 
 
-class InvoiceList(ListView):
+class InvoiceList(BaseView, ListView):
     model = Invoice
     template_name = 'invoice/list.html'
     paginate_by = 8
+    permission_required = 'invoice.view_invoice'
 
     def is_ajax(self, request):
         return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -27,12 +29,13 @@ class InvoiceList(ListView):
         return super(InvoiceList, self).get(*args, **kwargs)
 
 
-class InvoiceDetail(DetailView):
+class InvoiceDetail(BaseView, DetailView):
     model = Invoice
     form_class = InvoiceForm
     template_name = 'invoice/detail.html'
     fields = "__all__"
     pk_url_kwarg = 'pk'
+    permission_required = 'invoice.view_invoice'
 
     def is_ajax(self, request):
         return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -53,22 +56,24 @@ class InvoiceDetail(DetailView):
         return context
         
 
-class InvoiceCreate(CreateView):
+class InvoiceCreate(BaseView, CreateView):
     model = Invoice
     form_class = InvoiceForm
     template_name = 'invoice/create.html'
     success_url = reverse_lazy('invoice:list')
+    permission_required = 'invoice.add_invoice'
 
     def get_success_url(self):
         return reverse('invoice:detail', kwargs={'pk':self.object.id})
 
 
-class InvoiceUpdate(UpdateView):
+class InvoiceUpdate(BaseView, UpdateView):
     model = Invoice
     form_class = InvoiceForm
     template_name = 'invoice/detail.html'
     fields = "__all__"
     pk_url_kwarg = 'pk'
+    permission_required = 'invoice.change_invoice'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -89,11 +94,12 @@ class InvoiceUpdate(UpdateView):
         return redirect('invoice:detail', pk=obj.id)
 
 
-class InvoiceLineCreate(CreateView):
+class InvoiceLineCreate(BaseView, CreateView):
     model = InvoiceLine
     form_class = InvoiceLineForm
     template_name = 'invoice/add_line.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'invoiceline.add_invoiceline'
 
     def post(self, request, *args, **kwargs):
         return super(InvoiceLineCreate, self).post(request, *args, **kwargs)
@@ -103,31 +109,34 @@ class InvoiceLineCreate(CreateView):
         return reverse('invoice:detail', kwargs={'pk':pk})
 
 
-class InvoiceLineEdit(UpdateView):
+class InvoiceLineEdit(BaseView, UpdateView):
     model = InvoiceLine
     form_class = InvoiceLineForm
     template_name = 'invoice/edit_line.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'invoiceline.change_invoiceline'
 
     def get_success_url(self):
         line = InvoiceLine.objects.get(pk=self.kwargs['pk'])
         return reverse('invoice:detail', kwargs={'pk':line.parent.id})
 
 
-class InvoiceLineDelete(DeleteView):
+class InvoiceLineDelete(BaseView, DeleteView):
     model = InvoiceLine
     template_name = 'invoice/delete_line.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'invoiceline.delete_invoiceline'
 
     def get_success_url(self):
         return reverse('invoice:detail', kwargs={'pk':self.object.parent.id})
 
 
-class CreateStockEntry(CreateView):
+class CreateStockEntry(BaseView, CreateView):
     model = StockEntry
     form_class = StockEntryForm
     template_name = 'invoice/create_ste.html'
     pk_url_kwarg = 'pk'
+    permission_required = 'stockentry.add_stockentry'
 
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
@@ -167,10 +176,11 @@ class CreateStockEntry(CreateView):
         return reverse('stock:detail', kwargs={'pk':self.object.id})
 
 
-class ListStockEntry(ListView):
+class ListStockEntry(BaseView, ListView):
     model = StockEntry
     template_name = 'invoice/list_ste.html'
     paginate_by = 5
+    permission_required = 'stockentry.view_stockentry'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
