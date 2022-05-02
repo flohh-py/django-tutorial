@@ -71,8 +71,8 @@ class MainDoc(models.Model):
     status = models.IntegerField(choices=DOC_STATUS, default=0, null=True, max_length=1)
     date = models.DateField(default=timezone.now)
     post_date = models.DateField(default=timezone.now)
-    created_by = models.ForeignKey(MainUser, related_name='created_by', on_delete=models.SET_NULL, null=True)
-    last_modify = models.ForeignKey(MainUser, related_name='last_modify', on_delete=models.SET_NULL, null=True)
+    created_by = models.ForeignKey(MainUser, related_name='%class)s_created', on_delete=models.SET_NULL, null=True)
+    last_modify = models.ForeignKey(MainUser, related_name='%(class)s_modify', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         abstract = True

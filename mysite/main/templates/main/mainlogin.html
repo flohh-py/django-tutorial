@@ -1,8 +1,9 @@
-<h1> Login</h1>
-
+{% extends 'main/main.html' %}
+{% load static %}
+{% block content %}
 <form method="POST">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" value="login">
-
 </form>
+{% endblock content %}
